@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:background="@color/purewhite"
+    app:cardElevation="@dimen/eight_dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/ten_dp"
+        android:paddingBottom="@dimen/ten_dp">
+
+        <ImageView
+            android:id="@+id/img_spiral"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/spiral_home_page"
+            android:scaleType="fitXY"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/img_spiral"
+            android:layout_centerInParent="true"
+            android:paddingRight="@dimen/ten_dp"
+            android:paddingBottom="@dimen/five_dp"
+            android:paddingLeft="@dimen/five_dp">
+        <TextView
+            android:id="@+id/patientname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="@dimen/five_dp"
+            android:text="Anjali Sisodia"
+            android:textColor="@color/heading_purple"
+            android:textSize="@dimen/eighteen_sp"
+            android:fontFamily="@font/roboto_medium"/>
+
+        <TextView
+            android:id="@+id/tv_patient_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/patientname"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="Patient id-23412"
+            android:textSize="@dimen/twelve_dp"
+            android:fontFamily="@font/roboto_regular"/>
+
+        <ImageView
+            android:id="@+id/img_eye_view"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/tv_patient_id"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:src="@drawable/view_violet"
+            android:layout_centerVertical="true"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

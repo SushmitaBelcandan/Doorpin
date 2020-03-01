@@ -1,0 +1,82 @@
+<resources>
+    <string name="app_name">Doorpin</string>
+    <string name="email_or_mn">Email id or mobile number</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="submit">Submit</string>
+    <string name="reset">Reset</string>
+    <string name="b_t_login">Back to Login</string>
+    <string name="fp">Forgot your password?</string>
+    <string name="congratulations">Congratulations !!</string>
+    <string name="info_fp">Please enter your registered email id or mobile number below to receive OTP</string>
+    <string name="enterotp">Enter OTP</string>
+    <string name="text_info">Please enter the OTP sent to "abc@gmail.com"</string>
+    <string name="resendtime">00:60</string>
+    <string name="verify">Verify</string>
+    <string name="save">Save</string>
+    <string name="add">Add</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="other">Other</string>
+    <string name="resetpassword">Reset Password</string>
+    <string name="info_rp">Please create a new password</string>
+    <string name="createpassword">Create Password</string>
+    <string name="confirmpassword">Confirm Password</string>
+    <string name="cong_info">Your password has been reset successfully</string>
+    <string name="name">Name</string>
+    <string name="type_of_illness">Type of Illness</string>
+    <string name="follow_up_date">Follow Up Date</string>
+    <string name="mobilenumber">Mobile Number</string>
+    <string name="education">Education</string>
+    <string name="specialiazation">Specialiazation</string>
+    <string name="experience">Experience</string>
+    <string name="address">Address</string>
+    <string name="email">Email Id</string>
+    <string name="dateofbirth">Date of Birth</string>
+    <string name="gender">Gender</string>
+    <string name="marital_status">Marital Status</string>
+    <string name="t_o_d">Type of disease</string>
+    <string name="fw_up">Follow Update</string>
+    <string name="patient_age">Patient\'s Age</string>
+    <string name="edit">Edit</string>
+    <string name="doctor_name">Meeta Sharma</string>
+    <string name="doctor_specialiazation">Neurologist</string>
+    <string name="years_of_experience">16 years of experience</string>
+    <string name="doc_name">91-7895643210</string>
+    <string name="grad_details">MBBS,MD-General Medicine,DM-Neurology</string>
+    <string name="grad_details_nurse">MSN</string>
+    <string name="address_details">81/3,Paliya Road,HBR Layout,Bangalore</string>
+    <string name="documents">Documents</string>
+    <string name="surgeries_done">Surgeries done by you</string>
+    <string name="nurse_name">Shreya Mehal</string>
+    <string name="search_by_name_or_patient_id">Search by Patient Name/ Patient Id</string>
+    <string name="no_patient_list">No Patient List</string>
+    <string name="network_error">Network Connection error! Please try again later</string>
+    <string name="patient_details_toolbar">Patient Details</string>
+    <!--illness list-->
+    <string name="documents_illness">Documents</string>
+    <string name="prescription_illness">Prescription</string>
+    <string name="reports_illness">Reports</string>
+    <string name="other_doc_illness">Other Documents</string>
+    <string name="followup_date">Follow up Date</string>
+    <string name="personal_info">Personal \n Information</string>
+    <!--upload docs-->
+    <string name="upload_prsec">Upload Prescription</string>
+    <string name="upload_report">Upload Report</string>
+    <string name="upload_other_docs">Upload Other Document</string>
+    <string name="name_np">Enter patient name</string>
+    <string name="email_np">Enter patient name</string>
+    <string name="dob_np">Enter patient name</string>
+    <string name="mobile_np">Enter patient name</string>
+    <string name="address_np">Enter patient name</string>
+    <string name="type_disease_np">Enter patient name</string>
+    <string name="followup_np">Enter patient name</string>
+    <!--surgery patient list-->
+    <string name="view_docs_surg">View Documents</string>
+    <string name="capture_notes_surg">Capture Notes</string>
+    <!--view docs activity-->
+    <string name="view_docs_toolbar">View Documents</string>
+    <!--new surgery-->
+    <string name="new_surgery_toolbar_title">New Surgery</string>
+
+</resources>

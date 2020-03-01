@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/purewhite"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_view_docs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:theme="@style/ToolbarColoredBackArrow"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:title="@string/view_docs_surg"
+        app:titleTextAppearance="@style/toolbar_title"
+        app:titleTextColor="@color/heading_purple" />
+
+    <com.mindorks.placeholderview.PlaceHolderView
+        android:id="@+id/phvViewDocs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purewhite" />
+</LinearLayout>

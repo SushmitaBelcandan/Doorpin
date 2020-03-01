@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/purewhite"
+        android:drawable="@drawable/selected_tab_left"
+        android:state_selected="true"></item>
+
+    <item android:color="@color/grey"
+        android:drawable="@drawable/unselected_tab_left"
+        android:state_selected="false"></item>
+</selector>

@@ -1,0 +1,324 @@
+package com.app.doorpin.Activity;
+
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.app.doorpin.Adapters.PatientAdapter;
+import com.app.doorpin.Adapters.Utils;
+import com.app.doorpin.R;
+import com.app.doorpin.models.Patient;
+import com.app.doorpin.reference.SessionManager;
+import com.app.doorpin.retrofit.ApiClient;
+import com.app.doorpin.retrofit.ApiInterface;
+import com.app.doorpin.retrofit.HomePage_RetroModel;
+import com.app.doorpin.retrofit.SearchPatient_RetroModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class HomePage_Doctor extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+    ApiInterface apiInterface;
+    SessionManager sessionManager;
+    ProgressDialog progressDialog;
+
+    ActionBar toolBar;
+    BottomNavigationView bottomNavigationView;
+    FloatingActionButton fab_homepage;
+
+    LinearLayout llBtnSearch, llNoData, llNetworkError;
+    EditText etSearch;
+    TextView tvUserName;
+    ImageButton imgBtnLogout;
+    RecyclerView rv_patient;
+
+    private ArrayList<String> arrlist_patient_id;
+    private ArrayList<String> arrlist_patient_name;
+
+    private String str_search_key;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home_page_doctor);
+
+        sessionManager = new SessionManager(HomePage_Doctor.this);
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        progressDialog = new ProgressDialog(HomePage_Doctor.this);
+        progressDialog.setMessage("Please wait.....");
+
+        toolBar = getSupportActionBar();
+        bottomNavigationView = findViewById(R.id.btm_navigation_view);
+        fab_homepage = findViewById(R.id.fab_homepage_doctor);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setItemIconTintList(null);
+
+        llBtnSearch = findViewById(R.id.llBtnSearch);
+        etSearch = findViewById(R.id.etSearch);
+        rv_patient = findViewById(R.id.rv_patient);
+        llNoData = findViewById(R.id.llNoData);
+        llNetworkError = findViewById(R.id.llNetworkError);
+        imgBtnLogout = findViewById(R.id.imgBtnLogout);
+        tvUserName = findViewById(R.id.tvUserName);
+
+        rv_patient.setHasFixedSize(true);
+        rv_patient.setLayoutManager(new GridLayoutManager(this, 2));//grid view of patient list
+
+        fab_homepage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomePage_Doctor.this, NewPatient.class));
+            }
+        });
+        //default patient list
+        getPatientList(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId());
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (etSearch.getText().toString().length() == 0) {
+                    getPatientList(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId());//when search text is empty then show home page default data
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        //call search
+        llBtnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Utils.CheckInternetConnection(getApplicationContext())) {
+
+                    str_search_key = etSearch.getText().toString().trim();
+                    if (str_search_key.equals(null) || str_search_key.isEmpty()) {
+                        Toast.makeText(HomePage_Doctor.this, "Not a Valid Keyword", Toast.LENGTH_SHORT).show();
+                    } else {
+                        searchPatient(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId(), "56", str_search_key);
+                    }
+
+                } else {
+                    Toast.makeText(HomePage_Doctor.this, "Please Check Internet Connection!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        //call logout
+        imgBtnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentLogin = new Intent(HomePage_Doctor.this, Login.class);
+                startActivity(intentLogin);
+                sessionManager.logoutUser();
+                finish();
+            }
+        });
+
+    }
+
+    private void searchPatient(String usr_type, String usr_id, String patient_id, String str_search_data) {
+        try {
+            progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        SearchPatient_RetroModel search_patient_model = new SearchPatient_RetroModel(usr_type, usr_id, patient_id, str_search_data);
+        Call<SearchPatient_RetroModel> search_patient_call = apiInterface.getPatientList(search_patient_model);
+        search_patient_call.enqueue(new Callback<SearchPatient_RetroModel>() {
+            @Override
+            public void onResponse(Call<SearchPatient_RetroModel> call, Response<SearchPatient_RetroModel> response) {
+                SearchPatient_RetroModel search_resources = response.body();
+                if (response.isSuccessful()) {
+                    if (search_resources.status.equals("success")) {
+                        List<SearchPatient_RetroModel.Search_Datum> datumList = search_resources.result;
+                        if (datumList.size() <= 0) {
+                            llNoData.setVisibility(View.VISIBLE);
+                            rv_patient.setVisibility(View.GONE);
+                            llNetworkError.setVisibility(View.GONE);
+                            progressDialog.dismiss();
+                        } else {
+
+                            rv_patient.setVisibility(View.VISIBLE);//show list
+                            llNoData.setVisibility(View.GONE);
+                            llNetworkError.setVisibility(View.GONE);
+
+                            arrlist_patient_id = new ArrayList<>();
+                            arrlist_patient_name = new ArrayList<>();
+                            for (SearchPatient_RetroModel.Search_Datum datum : datumList) {
+                                if (datum.patient_id.equals(null) || datum.patient_id.isEmpty() || datum.patient_id.equals("NA")) {
+                                    //skip row for null value
+                                } else {
+                                    arrlist_patient_id.add(datum.patient_id);
+                                    arrlist_patient_name.add(datum.patient_name);
+                                }
+
+                            }
+                            PatientAdapter adapter = new PatientAdapter(arrlist_patient_id, arrlist_patient_name);
+                            rv_patient.setAdapter(adapter);
+                            progressDialog.dismiss();
+                            Toast.makeText(HomePage_Doctor.this, search_resources.message, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        llNoData.setVisibility(View.VISIBLE);
+                        rv_patient.setVisibility(View.GONE);
+                        llNetworkError.setVisibility(View.GONE);
+                        progressDialog.dismiss();
+                        Toast.makeText(HomePage_Doctor.this, search_resources.message, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    llNetworkError.setVisibility(View.VISIBLE);
+                    llNoData.setVisibility(View.GONE);
+                    rv_patient.setVisibility(View.GONE);
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchPatient_RetroModel> call, Throwable t) {
+                call.cancel();
+                llNetworkError.setVisibility(View.VISIBLE);
+                llNoData.setVisibility(View.GONE);
+                rv_patient.setVisibility(View.GONE);
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+    private void getPatientList(String usr_type, String usr_id) {
+        try {
+            progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        HomePage_RetroModel homepage_model = new HomePage_RetroModel(usr_type, usr_id);
+        Call<HomePage_RetroModel> homepage_call = apiInterface.getPatientListHomePage(homepage_model);
+        homepage_call.enqueue(new Callback<HomePage_RetroModel>() {
+            @Override
+            public void onResponse(Call<HomePage_RetroModel> call, Response<HomePage_RetroModel> response) {
+                HomePage_RetroModel homepage_resources = response.body();
+                if (response.isSuccessful()) {
+                    if (homepage_resources.status.equals("success")) {
+
+                        if (homepage_resources.user_name.equals("NA") || homepage_resources.user_name.equals(null) ||
+                                homepage_resources.user_name.equals("null") || homepage_resources.user_name.isEmpty()) {
+                            tvUserName.setText("");
+                        } else {
+                            tvUserName.setText("Dr." + " " + homepage_resources.user_name);
+                        }
+                        List<HomePage_RetroModel.HomePage_Datum> datumList = homepage_resources.response;
+                        if (datumList.size() <= 0) {
+                            llNoData.setVisibility(View.VISIBLE);
+                            rv_patient.setVisibility(View.GONE);
+                            llNetworkError.setVisibility(View.GONE);
+                            progressDialog.dismiss();
+                        } else {
+
+                            rv_patient.setVisibility(View.VISIBLE);//show list
+                            llNoData.setVisibility(View.GONE);
+                            llNetworkError.setVisibility(View.GONE);
+
+                            arrlist_patient_id = new ArrayList<>();
+                            arrlist_patient_name = new ArrayList<>();
+                            for (HomePage_RetroModel.HomePage_Datum datum : datumList) {
+                                if (datum.patient_id.equals(null) || datum.patient_id.isEmpty() || datum.patient_id.equals("NA")) {
+                                    //skip row for null value
+                                } else {
+                                    arrlist_patient_id.add(datum.patient_id);
+                                    arrlist_patient_name.add(datum.patient_name);
+                                }
+
+                            }
+                            PatientAdapter adapter = new PatientAdapter(arrlist_patient_id, arrlist_patient_name);
+                            rv_patient.setAdapter(adapter);
+                            progressDialog.dismiss();
+                            //   Toast.makeText(HomePage_Doctor.this, homepage_resources.message, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        llNoData.setVisibility(View.VISIBLE);
+                        rv_patient.setVisibility(View.GONE);
+                        llNetworkError.setVisibility(View.GONE);
+                        progressDialog.dismiss();
+                        Toast.makeText(HomePage_Doctor.this, homepage_resources.message, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    llNetworkError.setVisibility(View.VISIBLE);
+                    llNoData.setVisibility(View.GONE);
+                    rv_patient.setVisibility(View.GONE);
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HomePage_RetroModel> call, Throwable t) {
+                call.cancel();
+                llNetworkError.setVisibility(View.VISIBLE);
+                llNoData.setVisibility(View.GONE);
+                rv_patient.setVisibility(View.GONE);
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.navigation_doctor_patients:
+                startActivity(new Intent(HomePage_Doctor.this, HomePage_Doctor.class));
+                finish();
+                break;
+
+            case R.id.navigation_doctor_surgeries:
+                startActivity(new Intent(HomePage_Doctor.this, MySurgeries.class));
+                finish();
+                break;
+
+            case R.id.navigation_doctor_profile:
+                startActivity(new Intent(HomePage_Doctor.this, Profile_Doctor.class));
+                finish();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+
+}

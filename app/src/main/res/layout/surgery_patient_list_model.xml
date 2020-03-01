@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purewhite"
+        android:padding="@dimen/fifteen_dp">
+
+        <TextView
+            android:id="@+id/tvPatientName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:text="Anjali Sisodiya"
+            android:textColor="@color/heading_purple"
+            android:textSize="@dimen/eighteen_sp" />
+
+        <TextView
+            android:id="@+id/tvPatientId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tvPatientName"
+            android:layout_marginLeft="@dimen/eight_dp"
+            android:layout_toRightOf="@+id/tvPatientName"
+            android:fontFamily="@font/roboto_regular"
+            android:text="Patient Id-12345"
+            android:textColor="@color/dark_grey"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:id="@+id/llDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true">
+
+            <ImageButton
+                android:layout_width="25dp"
+                android:layout_height="30dp"
+                android:background="@drawable/delete_grey" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purewhite"
+        android:padding="@dimen/fifteen_dp">
+
+        <LinearLayout
+            android:id="@+id/llViewDocs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/imgBtnViewDocs"
+                android:layout_width="25dp"
+                android:layout_height="20dp"
+                android:background="@drawable/view_violet"
+                android:padding="@dimen/five_dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/view_docs_surg"
+                android:textColor="@color/dark_grey"
+                android:textSize="@dimen/twelve_sp"
+                android:padding="@dimen/five_dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llCaptureNotes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/imgBtnCaptureNotes"
+                android:layout_width="30dp"
+                android:layout_height="25dp"
+                android:layout_weight="1"
+                android:background="@drawable/camera_grey"
+                android:padding="@dimen/five_dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/capture_notes_surg"
+                android:textColor="@color/dark_grey"
+                android:textSize="@dimen/twelve_sp"
+                android:padding="@dimen/five_dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_1"></View>
+</LinearLayout>

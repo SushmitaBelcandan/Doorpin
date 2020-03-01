@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/purewhite"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_patient_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:theme="@style/ToolbarColoredBackArrow"
+                app:navigationIcon="?attr/homeAsUpIndicator"
+                app:title="@string/patient_details_toolbar"
+                app:titleTextAppearance="@style/toolbar_title"
+                app:titleTextColor="@color/heading_purple" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/purewhite"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/twelve_dp">
+
+            <ImageView
+                android:id="@+id/img_spiral"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/tweenty_dp"
+                android:background="@color/purewhite"
+                android:paddingTop="@dimen/tweenty_dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/spiral" />
+
+            <ScrollView
+                android:id="@+id/scrollViewPatientDetails"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/purewhite"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/twelve_dp">
+
+                    <LinearLayout
+                        android:id="@+id/llPatientDetailHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="50dp"
+                        android:orientation="vertical"
+                        android:padding="@dimen/ten_dp">
+
+                        <TextView
+                            android:id="@+id/patientname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/img_spiral"
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="Anjali Sisodia"
+                            android:textColor="@color/heading_purple"
+                            android:textSize="22sp" />
+
+                        <TextView
+                            android:id="@+id/tv_patient_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/patientname"
+                            android:layout_toRightOf="@+id/img_spiral"
+                            android:fontFamily="@font/roboto_regular"
+                            android:text="Patient id-23412"
+                            android:textColor="@color/light_grey"
+                            android:textSize="@dimen/fourteen_sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_info_illness"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llPatientDetailHeader"
+                        android:orientation="vertical">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardViewHeader"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/eight_dp"
+                            android:layout_marginRight="@dimen/eight_dp"
+                            app:cardBackgroundColor="@color/purewhite"
+                            app:cardCornerRadius="@dimen/eight_dp"
+                            app:cardElevation="@dimen/eight_dp"
+                            app:cardUseCompatPadding="true">
+
+                            <LinearLayout
+                                android:id="@+id/lltablayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@color/purewhite">
+
+                                <com.google.android.material.tabs.TabLayout
+                                    android:id="@+id/tabPatientDetails"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="fill"
+                                    app:tabIndicator="@android:color/transparent"
+                                    app:tabIndicatorHeight="0dp"
+                                    app:tabMaxWidth="0dp"
+                                    app:tabMode="fixed"
+                                    app:tabPaddingStart="-1dp"
+                                    app:tabPaddingEnd="-1dp"
+                                    app:tabSelectedTextColor="@color/purewhite"
+                                    app:tabTextAppearance="@style/tabTextAppearancePatientDetails" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <com.app.doorpin.Adapters.CustomViewPager
+                            android:id="@+id/viewPager"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/purewhite" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </ScrollView>
+        </LinearLayout>
+    </LinearLayout>
+
+   <!-- <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_illness_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/tweenty_dp"
+        android:background="@color/orange"
+        android:backgroundTint="@color/orange"
+        android:src="@drawable/add"
+        app:elevation="3dp"
+        app:maxImageSize="50dp" />-->
+</RelativeLayout>

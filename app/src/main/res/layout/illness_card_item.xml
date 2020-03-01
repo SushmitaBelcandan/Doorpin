@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/purewhite"
+    app:cardCornerRadius="@dimen/five_dp"
+    app:cardElevation="@dimen/ten_dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_editDisease"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/purewhite"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/ll_type_of_illness"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_info_illness"
+                android:background="@color/purewhite"
+                android:orientation="horizontal"
+                android:padding="@dimen/eight_dp">
+
+                <TextView
+                    android:id="@+id/tv_type_of_illness"
+                    style="@style/edit_disease_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="6"
+                    android:text="@string/type_of_illness" />
+
+                <EditText
+                    android:id="@+id/et_type_of_illness"
+                    style="@style/edit_disease_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_follow_up_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_type_of_illness"
+                android:background="@color/purewhite"
+                android:orientation="horizontal"
+                android:padding="@dimen/five_dp">
+
+                <TextView
+                    android:id="@+id/tv_follow_update"
+                    style="@style/edit_disease_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="6"
+                    android:text="@string/follow_up_date" />
+
+                <EditText
+                    android:id="@+id/et_illness_follow_update"
+                    style="@style/edit_disease_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:drawableRight="@drawable/ic_action_name" />
+            </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewSaveBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_follow_up_date"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/fifteen_dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="@dimen/five_dp"
+                app:cardUseCompatPadding="true">
+
+                <Button
+                    android:id="@+id/btn_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_shape"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/save"
+                    android:textAllCaps="false"
+                    android:textColor="@color/purewhite"
+                    android:textSize="@dimen/fifteen_sp" />
+            </androidx.cardview.widget.CardView>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_illness"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/fifteen_sp"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_disease_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="Cold &amp; Cough"
+                    android:textColor="@color/heading_purple"
+                    android:textSize="@dimen/eighteen_sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_followup_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/viewillness"
+                        android:gravity="center|left"
+                        android:text="@string/follow_up_date"
+                        android:textColor="@color/black_shade_1"
+                        android:textSize="@dimen/twelve_sp" />
+
+                    <TextView
+                        android:id="@+id/tv_followup_date_val"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/viewillness"
+                        android:gravity="center|right"
+                        android:text="10/03/1990"
+                        android:textColor="@color/black_shade_1"
+                        android:textSize="@dimen/twelve_sp"
+                        android:layout_marginLeft="@dimen/tweenty_dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/imgbtn_edit"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="@dimen/fifteen_dp"
+                android:layout_toLeftOf="@+id/imgbtn_delete"
+                android:background="@drawable/edit_grey" />
+
+            <ImageButton
+                android:id="@+id/imgbtn_delete"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/delete_grey" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/viewillness"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/rl_illness"
+            android:background="@color/grey" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/fifteen_dp"
+            android:paddingTop="@dimen/five_dp"
+            android:paddingRight="@dimen/fifteen_dp"
+            android:paddingBottom="@dimen/five_dp">
+
+            <TextView
+                android:id="@+id/tv_documents"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/viewillness"
+                android:layout_margin="10dp"
+                android:layout_weight="2"
+                android:gravity="center|left"
+                android:text="@string/documents_illness"
+                android:textColor="@color/black_shade_1"
+                android:textSize="@dimen/fourteen_sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:padding="3dp"
+                android:gravity="right">
+
+                <ImageButton
+                    android:id="@+id/imgbtn_upload"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_below="@+id/viewillness"
+                    android:layout_gravity="right|center"
+                    android:background="@drawable/upload_violet" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tv_documents"
+            android:layout_marginBottom="@dimen/ten_dp"
+            android:orientation="horizontal"
+            android:padding="@dimen/five_dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:elevation="@dimen/five_dp"
+                    app:cardBackgroundColor="@color/purewhite"
+                    app:cardCornerRadius="@dimen/eight_dp"
+                    app:cardElevation="@dimen/five_dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/orange_bg"
+                        android:padding="1dp">
+
+                        <ImageView
+                            android:id="@+id/img_illness_presc"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/document_grey" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/tv_presecription"
+                    style="@style/illness_doc_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/prescription_illness" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ten_dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:elevation="@dimen/five_dp"
+                    app:cardBackgroundColor="@color/purewhite"
+                    app:cardCornerRadius="@dimen/eight_dp"
+                    app:cardElevation="@dimen/five_dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/orange_bg"
+                        android:padding="1dp">
+
+                        <ImageView
+                            android:id="@+id/img_illness_reports"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/document_grey" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/tv_report"
+                    style="@style/illness_doc_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/reports_illness" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ten_dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:elevation="@dimen/five_dp"
+                    app:cardBackgroundColor="@color/purewhite"
+                    app:cardCornerRadius="@dimen/eight_dp"
+                    app:cardElevation="@dimen/five_dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/orange_bg"
+                        android:padding="1dp">
+
+                        <ImageView
+                            android:id="@+id/img_illness_other_doc"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/document_grey" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/tv_other_doc"
+                    style="@style/illness_doc_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/other_doc_illness" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+
+

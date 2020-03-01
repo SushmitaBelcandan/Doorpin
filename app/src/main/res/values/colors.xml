@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#601D60</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="purple">#7D297E</color>
+    <color name="heading_purple">#282760</color>
+    <color name="orange">#EF4A34</color>
+    <color name="dark_grey">#838383</color><!--patient_details_heading_left-->
+    <color name="light_grey">#959595</color><!--patient_details_values_right-->
+    <color name="grey">#BABABA </color>
+    <color name="grey_1">#CECECE</color>
+    <color name="grey_2">#EBEBEB</color>
+    <color name="purewhite">#ffffff</color>
+    <color name="black_et_txt_clr">#4A4A4A</color>
+    <color name="black_shade_1">#464646</color>
+    <color name="black_shade_2">#787878</color>
+</resources>
