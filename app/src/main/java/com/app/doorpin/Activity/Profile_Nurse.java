@@ -26,6 +26,7 @@ public class Profile_Nurse extends AppCompatActivity implements BottomNavigation
         bottomNavigationView = findViewById(R.id.btm_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setItemIconTintList(null);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_nurse_profile).setChecked(true);//make bottom navigation active for current page
 
     }
 

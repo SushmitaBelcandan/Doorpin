@@ -80,7 +80,7 @@
                             android:singleLine="true"
                             android:textCursorDrawable="@drawable/text_cursor_color"
                             android:textSize="@dimen/sixteen_sp"
-                            android:fontFamily="@font/helveticaneue_light"
+                            android:fontFamily="@font/roboto_regular"
                             android:textColor="@color/black_et_txt_clr"/>
                     </LinearLayout>
 
@@ -133,7 +133,7 @@
                             android:singleLine="true"
                             android:textCursorDrawable="@drawable/text_cursor_color"
                             android:textSize="@dimen/sixteen_sp"
-                            android:fontFamily="@font/helveticaneue_light"/>
+                            android:fontFamily="@font/roboto_regular"/>
                     </LinearLayout>
 
                     <androidx.cardview.widget.CardView
@@ -155,7 +155,7 @@
                             android:textColor="@color/purewhite"
                             android:textSize="@dimen/sixteen_sp"
                             android:textStyle="normal"
-                            android:fontFamily="@font/helveticaneue_medium"/>
+                            android:fontFamily="@font/roboto_medium"/>
                     </androidx.cardview.widget.CardView>
 
                     <TextView
@@ -168,7 +168,7 @@
                         android:text="Forgot password?"
                         android:textColor="@color/orange"
                         android:textSize="@dimen/fourteen_sp"
-                        android:fontFamily="@font/helveticaneue_medium"/>
+                        android:fontFamily="@font/roboto_regular"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

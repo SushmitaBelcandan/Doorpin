@@ -161,21 +161,42 @@
             android:layout_marginTop="40dp"
             android:background="@drawable/dottedlines" />
 
-        <Button
-            android:id="@+id/btn_edit"
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/button_shape"
-            android:drawableLeft="@drawable/ic_action_edit"
-            android:fontFamily="@font/roboto_medium"
-            android:paddingLeft="50dp"
-            android:text="@string/edit"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/fifteen_dp"
-            android:textAllCaps="false"
-            android:textColor="@color/purewhite"
-            android:textSize="@dimen/eighteen_sp" />
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="@dimen/five_dp"
+            app:cardUseCompatPadding="true">
 
+            <LinearLayout
+                android:id="@+id/ll_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_shape"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/iv_edit"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_action_edit" />
+
+                <TextView
+                    android:id="@+id/btn_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/roboto_medium"
+                    android:padding="@dimen/five_dp"
+                    android:text="@string/edit"
+                    android:textAllCaps="false"
+                    android:textColor="@color/purewhite"
+                    android:textSize="@dimen/eighteen_sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

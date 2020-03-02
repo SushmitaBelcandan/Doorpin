@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,7 +19,7 @@ import com.app.doorpin.R;
 public class PatientDetails_PersoInfo_Frag extends Fragment {
 
     TextView tv_emailVal, tv_dobVal, tv_mobileNumberVal, tv_genderVal, tv_maritalStatusVal, tv_parentsAgeVal, tv_addressVal;
-    Button btn_edit;
+    LinearLayout ll_edit;
 
     public PatientDetails_PersoInfo_Frag() {
         super();
@@ -37,7 +38,7 @@ public class PatientDetails_PersoInfo_Frag extends Fragment {
         tv_maritalStatusVal = view.findViewById(R.id.tv_maritalStatusVal);
         tv_parentsAgeVal = view.findViewById(R.id.tv_parentsAgeVal);
         tv_addressVal = view.findViewById(R.id.tv_addressVal);
-        btn_edit = view.findViewById(R.id.btn_edit);
+        ll_edit = view.findViewById(R.id.ll_edit);
 
         tv_emailVal.setText("anjali.sisodiya@gmail.com");
         tv_dobVal.setText("10/03/1997");
@@ -51,7 +52,7 @@ public class PatientDetails_PersoInfo_Frag extends Fragment {
     }
 
     public void init() {
-        btn_edit.setOnClickListener(new View.OnClickListener() {
+        ll_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intentEditPatientDetails = new Intent(getActivity(), EditPatientDetails.class);

@@ -172,6 +172,7 @@
         <item name="android:padding">@dimen/eight_dp</item>
         <item name="android:textCursorDrawable">@drawable/text_cursor_color</item>
         <item name="android:background">@drawable/edit_text_bg</item>
+        <item name="android:layout_marginTop">@dimen/five_dp</item>
     </style>
 <style name="profile_texts">
     <item name="android:textSize">@dimen/fourteen_sp</item>

@@ -38,6 +38,7 @@ public class MySurgeries extends AppCompatActivity implements BottomNavigationVi
         bottomNavigationView = findViewById(R.id.btm_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setItemIconTintList(null);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_doctor_surgeries).setChecked(true);//make bottom navigation active for current page
 
         phv_surgeries = findViewById(R.id.phv_surgeries);
         fab_surgeries = findViewById(R.id.fab_surgeries);

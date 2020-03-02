@@ -35,6 +35,8 @@ public class Profile_Doctor extends AppCompatActivity implements BottomNavigatio
         bottomNavigationView=findViewById(R.id.btm_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setItemIconTintList(null);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_doctor_profile).setChecked(true);//make bottom navigation active for current page
+
 
         DoctorDocuments doctorDocuments[]=new DoctorDocuments[]{
                 new DoctorDocuments(R.drawable.document_grey),

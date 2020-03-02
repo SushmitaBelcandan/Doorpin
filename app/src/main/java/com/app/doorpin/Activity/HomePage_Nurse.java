@@ -77,6 +77,7 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
         fab_homepage = findViewById(R.id.fab_homepage_nurse);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setItemIconTintList(null);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_nurse_patients).setChecked(true);//make bottom navigation active for current page
 
         tvUserName = findViewById(R.id.tvUserName);
         etSearchNurse = findViewById(R.id.etSearchNurse);

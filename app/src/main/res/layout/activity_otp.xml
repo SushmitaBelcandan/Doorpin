@@ -30,10 +30,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/dp_logo"
+                android:fontFamily="@font/roboto_bold"
                 android:text="@string/enterotp"
                 android:textColor="@color/heading_purple"
-                android:textSize="26dp"
-                android:textStyle="bold" />
+                android:textSize="26dp" />
 
             <TextView
                 android:id="@+id/tv_text_info"
@@ -41,10 +41,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_enter_otp"
                 android:layout_centerHorizontal="true"
+                android:fontFamily="@font/roboto_regular"
                 android:paddingTop="@dimen/ten_dp"
                 android:text="@string/text_info"
                 android:textColor="@color/black_et_txt_clr"
-                android:textSize="@dimen/fourteen_sp"/>
+                android:textSize="@dimen/fourteen_sp" />
 
             <LinearLayout
                 android:id="@+id/ll_otp"
@@ -59,12 +60,15 @@
                     android:layout_width="40sp"
                     android:layout_height="42sp"
                     android:background="@drawable/rectangle_with_border"
+                    android:fontFamily="@font/roboto_medium"
                     android:gravity="center"
                     android:imeOptions="actionNext"
                     android:inputType="number"
                     android:maxLength="1"
                     android:nextFocusRight="@+id/editTexttwo"
-                    android:textCursorDrawable="@drawable/text_cursor_color" />
+                    android:textColor="@color/heading_purple"
+                    android:textCursorDrawable="@drawable/text_cursor_color"
+                    android:textSize="@dimen/sixteen_sp" />
 
                 <EditText
                     android:id="@+id/editTexttwo"
@@ -72,12 +76,15 @@
                     android:layout_height="42sp"
                     android:layout_marginLeft="10dp"
                     android:background="@drawable/rectangle_with_border"
+                    android:fontFamily="@font/roboto_medium"
                     android:gravity="center"
                     android:imeOptions="actionNext"
                     android:inputType="number"
                     android:maxLength="1"
                     android:nextFocusRight="@+id/editTextthree"
-                    android:textCursorDrawable="@drawable/text_cursor_color" />
+                    android:textColor="@color/heading_purple"
+                    android:textCursorDrawable="@drawable/text_cursor_color"
+                    android:textSize="@dimen/sixteen_sp" />
 
                 <EditText
                     android:id="@+id/editTextthree"
@@ -85,12 +92,15 @@
                     android:layout_height="42sp"
                     android:layout_marginLeft="10dp"
                     android:background="@drawable/rectangle_with_border"
+                    android:fontFamily="@font/roboto_medium"
                     android:gravity="center"
                     android:imeOptions="actionNext"
                     android:inputType="number"
                     android:maxLength="1"
                     android:nextFocusRight="@+id/editTextfour"
-                    android:textCursorDrawable="@drawable/text_cursor_color" />
+                    android:textColor="@color/heading_purple"
+                    android:textCursorDrawable="@drawable/text_cursor_color"
+                    android:textSize="@dimen/sixteen_sp" />
 
                 <EditText
                     android:id="@+id/editTextfour"
@@ -98,11 +108,14 @@
                     android:layout_height="42sp"
                     android:layout_marginLeft="10dp"
                     android:background="@drawable/rectangle_with_border"
+                    android:fontFamily="@font/roboto_medium"
                     android:gravity="center"
                     android:imeOptions="actionDone"
                     android:inputType="number"
                     android:maxLength="1"
-                    android:textCursorDrawable="@drawable/text_cursor_color" />
+                    android:textColor="@color/heading_purple"
+                    android:textCursorDrawable="@drawable/text_cursor_color"
+                    android:textSize="@dimen/sixteen_sp" />
             </LinearLayout>
 
             <RelativeLayout
@@ -126,6 +139,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
+                    android:fontFamily="@font/roboto_regular"
                     android:text="@string/resendtime"
                     android:textColor="@color/purple"
                     android:textSize="12dp" />
@@ -153,7 +167,10 @@
             android:layout_marginBottom="10dp"
             android:gravity="center"
             android:text=""
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:textSize="@dimen/fourteen_sp"
+            android:textColor="@color/black_et_txt_clr"
+            android:fontFamily="@font/roboto_regular"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -172,7 +189,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/purewhite"
                 android:textSize="@dimen/sixteen_sp"
-                android:textStyle="normal" />
+                android:fontFamily="@font/roboto_medium"/>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
 </RelativeLayout>

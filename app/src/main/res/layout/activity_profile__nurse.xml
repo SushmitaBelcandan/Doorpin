@@ -41,6 +41,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/btm_navigation_view"
         android:layout_below="@+id/ll_homepage"
         android:fillViewport="true">
 
@@ -180,7 +181,6 @@
                 android:id="@+id/ll_documents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/btm_navigation_view"
                 android:layout_below="@+id/view_location"
                 android:background="@color/purewhite"
                 android:elevation="5dp"
