@@ -78,5 +78,6 @@
     <string name="view_docs_toolbar">View Documents</string>
     <!--new surgery-->
     <string name="new_surgery_toolbar_title">New Surgery</string>
-
+    <!--New Patient-->
+    <string name="new_patient_toolbar">New Patient</string>
 </resources>

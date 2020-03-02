@@ -30,7 +30,7 @@
             android:name=".Activity.NewSurgery"
             android:label="New Surgery"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomTheme"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".Activity.Profile_Nurse"
@@ -66,7 +66,7 @@
             android:name=".Activity.NewPatient"
             android:label="New Patient"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomTheme"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".Activity.EditProfile"

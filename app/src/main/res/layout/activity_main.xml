@@ -64,7 +64,7 @@
                             android:padding="5dp"
                             android:text="Doctor"
                             android:textColor="@color/heading_purple"
-                            android:fontFamily="@font/helveticaneue_medium"/>
+                            android:fontFamily="@font/roboto_regular"/>
                     </LinearLayout>
 
 
@@ -97,7 +97,7 @@
                             android:gravity="center"
                             android:text="Nurse/Lab Incharge"
                             android:textColor="@color/heading_purple"
-                            android:fontFamily="@font/helveticaneue_medium"/>
+                            android:fontFamily="@font/roboto_regular"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

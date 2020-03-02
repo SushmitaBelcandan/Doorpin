@@ -22,6 +22,6 @@
         android:gravity="center"
         android:textSize="16dp"
         android:layout_marginBottom="10dp"
-        android:fontFamily="@font/helveticaneue_medium"/>
+        android:fontFamily="@font/roboto_regular"/>
 
 </RelativeLayout>

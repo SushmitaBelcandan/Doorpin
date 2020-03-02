@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.app.doorpin.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class Profile_Nurse extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class Profile_Nurse extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     ActionBar toolBar;
     BottomNavigationView bottomNavigationView;
@@ -22,8 +22,8 @@ public class Profile_Nurse extends AppCompatActivity implements BottomNavigation
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile__nurse);
 
-        toolBar=getSupportActionBar();
-        bottomNavigationView=findViewById(R.id.btm_navigation_view);
+        toolBar = getSupportActionBar();
+        bottomNavigationView = findViewById(R.id.btm_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setItemIconTintList(null);
 
