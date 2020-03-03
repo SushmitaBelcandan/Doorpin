@@ -2,9 +2,12 @@ package com.app.doorpin.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.se.omapi.Session;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -15,9 +18,13 @@ import android.widget.Toast;
 
 import com.app.doorpin.Adapters.Utils;
 import com.app.doorpin.R;
+import com.app.doorpin.reference.SessionManager;
 import com.app.doorpin.retrofit.ApiClient;
 import com.app.doorpin.retrofit.ApiInterface;
+import com.app.doorpin.retrofit.FP_Verify;
 import com.app.doorpin.retrofit.RP_Model;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,10 +35,13 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
     Button btn_reset;
     ApiInterface apiInterface;
     ProgressDialog progressDialog;
+    SessionManager sessionManager;
 
-    EditText et_createpassword, et_confirmpassword;
-    String createpassword, confirmpassword;
     ImageView ivConfirmShowPass, ivConfirmHidePass, ivCreateShowPass, ivCreateHidePass;
+    EditText et_createpassword, et_confirmpassword;
+
+    String createpassword, confirmpassword;
+    String str_login_id;
 
 
     @Override
@@ -39,7 +49,8 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
-
+        Intent oIntent = getIntent();//call from fpverify
+        str_login_id = oIntent.getExtras().getString("LOGIN_ID_RESET");
         et_createpassword = findViewById(R.id.et_cp);
         et_confirmpassword = findViewById(R.id.et_cfrmp);
         ivConfirmShowPass = findViewById(R.id.ivConfirmShowPass);
@@ -48,7 +59,7 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
         ivCreateHidePass = findViewById(R.id.ivCreateHidePass);
 
         progressDialog = new ProgressDialog(ResetPassword.this);
-
+        sessionManager = new SessionManager(ResetPassword.this);
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
 
@@ -105,12 +116,12 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
                 confirmpassword = et_confirmpassword.getText().toString();
                 if (validatePassword(createpassword, confirmpassword)) {
                     if (Utils.CheckInternetConnection(getApplicationContext())) {
-                        resetPassword();
+                        resetPassword(sessionManager.getDoctorNurseId(), str_login_id, confirmpassword);
                     } else {
                         Toast.makeText(this, "Please Check Internet Connection!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(this, "Please Enter Required Information", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(this, "Please Enter Required Information", Toast.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -124,15 +135,16 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
         if (setpassword == null || setpassword.trim().length() == 0) {
             Toast.makeText(getApplicationContext(), "Invalid Password", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (setpassword.equals(confirmpassword)) {
-            Toast.makeText(getApplicationContext(), "Password entered validated successfully", Toast.LENGTH_SHORT).show();
-            return true;
         }
-        return false;
+        if (!setpassword.equals(confirmpassword)) {
+            Toast.makeText(getApplicationContext(), "Password mismatch", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
 
-    public void resetPassword() {
+    public void resetPassword(String str_usr_type, String str_login_id, String str_password) {
 
         try {
             progressDialog.show();
@@ -141,24 +153,54 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
 
-        final RP_Model user = new RP_Model("1", "9535980054", "123456");
+        final RP_Model user = new RP_Model(str_usr_type, str_login_id, str_password);
         Call<RP_Model> call = apiInterface.resetPassword(user);
         call.enqueue(new Callback<RP_Model>() {
             @Override
             public void onResponse(Call<RP_Model> call, Response<RP_Model> response) {
                 RP_Model rp_model = response.body();
-                if (rp_model.status.equals("success")) {
-                    Toast.makeText(ResetPassword.this, rp_model.message, Toast.LENGTH_SHORT).show();
+                if (response.isSuccessful()) {
+                    if (rp_model.status.equals("success")) {
+                        List<RP_Model.RPModel> reset_pass_list = rp_model.response;
+                        for (RP_Model.RPModel reset_pass_data : reset_pass_list) {
+                            sessionManager.saveLoginData(reset_pass_data.user_id, reset_pass_data.login_id);
+                            sessionManager.saveDoctorNurseId(reset_pass_data.user_type);
+                        }
+                        Toast.makeText(ResetPassword.this, rp_model.message, Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                        startActivity(new Intent(ResetPassword.this, PasswordChanged.class));
+                        finish();
+                    } else {
+                        Toast.makeText(ResetPassword.this, rp_model.message, Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+                } else {
                     progressDialog.dismiss();
-                    startActivity(new Intent(ResetPassword.this, PasswordChanged.class));
-                    finish();
+                    new AlertDialog.Builder(ResetPassword.this)
+                            .setMessage("Network Connection error! Please try again later")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             }
 
             @Override
             public void onFailure(Call<RP_Model> call, Throwable t) {
-
                 call.cancel();
+                progressDialog.dismiss();
+                new AlertDialog.Builder(ResetPassword.this)
+                        .setMessage("Network Connection error! Please try again later")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
     }

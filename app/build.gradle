@@ -42,6 +42,8 @@ dependencies {
     //placeholder view----------------------------------------
     implementation 'com.mindorks.android:placeholderview:1.0.3'
     annotationProcessor 'com.mindorks.android:placeholderview-compiler:1.0.3'
-
+    //circle indicator
+    implementation 'me.relex:circleindicator:1.2.2@aar'
+    implementation 'com.android.support:design:29.0.0'
 
 }

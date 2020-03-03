@@ -1,7 +1,10 @@
 package com.app.doorpin.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -14,12 +17,18 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.app.doorpin.Adapters.Utils;
 import com.app.doorpin.R;
 import com.app.doorpin.reference.SessionManager;
 import com.app.doorpin.retrofit.ApiClient;
 import com.app.doorpin.retrofit.ApiInterface;
+import com.app.doorpin.retrofit.FP_Model;
 import com.app.doorpin.retrofit.FP_Verify;
 import com.app.doorpin.retrofit.ResendOtp;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,7 +63,7 @@ public class FPVerify extends AppCompatActivity implements View.OnClickListener 
         // tv_resend_otp.setVisibility(View.GONE);
 
         //  progressBarCircle = findViewById(R.id.progressBarCircle);
-        Intent oIntent = getIntent();//for payment id
+        Intent oIntent = getIntent();//call from forgotpassword
         str_login_id = oIntent.getExtras().getString("LOGIN_ID");
         tv_text_info = findViewById(R.id.tv_text_info);
         tv_text_info.setText("Please enter the OTP sent to" + " " + str_login_id);
@@ -158,7 +167,32 @@ public class FPVerify extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void onClick(View v) {
                 startTimer();
-                resendOtp();
+                if (Utils.CheckInternetConnection(getApplicationContext())) {
+                    if (str_login_id.equals("NA") || str_login_id.equals(null)) {
+                        new AlertDialog.Builder(FPVerify.this)
+                                .setMessage("Invalid User Id")
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    } else {
+                        resendOtp(session.getDoctorNurseId(), str_login_id);//recent saved user_type from forgot password
+                    }
+                } else {
+                    new AlertDialog.Builder(FPVerify.this)
+                            .setMessage("Please Check Internet Connection!")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+
             }
         });
 
@@ -184,11 +218,11 @@ public class FPVerify extends AppCompatActivity implements View.OnClickListener 
             public void onTick(long millisUntilFinished) {
                 i++;
                 progressBarCircle.setProgress((int) i * 100 / (100000 / 1000));
-                textTimer.setText("00: " + millisUntilFinished / 1000+" "+"s");
+                textTimer.setText("00: " + millisUntilFinished / 1000 + " " + "s");
             }
 
             public void onFinish() {
-                i=0;
+                i = 0;
                 textTimer.setText("Time Up!");
                 btn_verify.setEnabled(false);
                 btn_verify.setClickable(false);
@@ -199,7 +233,7 @@ public class FPVerify extends AppCompatActivity implements View.OnClickListener 
 
     }
 
-    public void resendOtp() {
+    public void resendOtp(String str_user_type, String str_login_id) {
 
         try {
             progressDialog.show();
@@ -208,22 +242,47 @@ public class FPVerify extends AppCompatActivity implements View.OnClickListener 
             e.printStackTrace();
         }
 
-        final ResendOtp resend_model = new ResendOtp("1", "9535980054");
+        final ResendOtp resend_model = new ResendOtp(str_user_type, str_login_id);
         Call<ResendOtp> resend_call = apiInterface.resendOtp(resend_model);
         resend_call.enqueue(new Callback<ResendOtp>() {
             @Override
             public void onResponse(Call<ResendOtp> call, Response<ResendOtp> response) {
                 ResendOtp resend_resources = response.body();
-                if (resend_resources.status.equals("success")) {
-
-                    Toast.makeText(FPVerify.this, resend_resources.message, Toast.LENGTH_SHORT).show();
+                if (response.isSuccessful()) {
+                    if (resend_resources.status.equals("success")) {
+                        Toast.makeText(FPVerify.this, resend_resources.message, Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    } else {
+                        Toast.makeText(FPVerify.this, resend_resources.message, Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+                } else {
                     progressDialog.dismiss();
+                    new AlertDialog.Builder(FPVerify.this)
+                            .setMessage("Network Connection error! Please try again later")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             }
 
             @Override
             public void onFailure(Call<ResendOtp> call, Throwable t) {
                 call.cancel();
+                progressDialog.dismiss();
+                new AlertDialog.Builder(FPVerify.this)
+                        .setMessage("Network Connection error! Please try again later")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
     }
@@ -239,11 +298,20 @@ public class FPVerify extends AppCompatActivity implements View.OnClickListener 
                 String otp3 = editTextthree.getText().toString().trim();
                 String otp4 = editTextfour.getText().toString().trim();
                 String otp = otp1 + otp2 + otp3 + otp4;
-                if (otp.length() != 4 || otp.isEmpty()) {
-                    Toast.makeText(this, "Invalid OTP", Toast.LENGTH_SHORT).show();
+                if (Utils.CheckInternetConnection(getApplicationContext())) {
+                    if (otp.length() != 4 || otp.isEmpty()) {
+                        Toast.makeText(this, "Invalid OTP", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (str_login_id.equals("NA") || str_login_id.equals(null)) {
+                            Toast.makeText(this, "Invalid Mobile Number", Toast.LENGTH_SHORT).show();
+                        } else {
+                            fpverify(session.getDoctorNurseId(), str_login_id, otp);
+                        }
+                    }
                 } else {
-                    fpverify(session.getDoctorNurseId(), str_login_id, otp);
+                    Toast.makeText(this, "Please Check Internet Connection!", Toast.LENGTH_SHORT).show();
                 }
+
                 // startActivity(new Intent(FPVerify.this,ResetPassword.class));
         }
 
@@ -263,19 +331,49 @@ public class FPVerify extends AppCompatActivity implements View.OnClickListener 
         call.enqueue(new Callback<FP_Verify>() {
             @Override
             public void onResponse(Call<FP_Verify> call, Response<FP_Verify> response) {
-                FP_Verify rp_model = response.body();
-                if (rp_model.status.equals("success")) {
-                    Toast.makeText(FPVerify.this, rp_model.message, Toast.LENGTH_SHORT).show();
+                FP_Verify fpv_model = response.body();
+                if (response.isSuccessful()) {
+                    if (fpv_model.status.equals("success")) {
+                        String login_id = "NA";
+                        List<FP_Verify.FPVerify> fp_verify_list = fpv_model.response;
+                        for (FP_Verify.FPVerify fp_data : fp_verify_list) {
+                            login_id = fp_data.login_id; //pass login id for reset api input params
+                        }
+                        Toast.makeText(FPVerify.this, fpv_model.message, Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                        startActivity(new Intent(FPVerify.this, ResetPassword.class).putExtra("LOGIN_ID_RESET", login_id));
+                        finish();
+                    } else {
+                        Toast.makeText(FPVerify.this, fpv_model.message, Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+                } else {
                     progressDialog.dismiss();
-                    startActivity(new Intent(FPVerify.this, ResetPassword.class));
-                    finish();
+                    new AlertDialog.Builder(FPVerify.this)
+                            .setMessage("Network Connection error! Please try again later")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             }
 
             @Override
             public void onFailure(Call<FP_Verify> call, Throwable t) {
-
                 call.cancel();
+                progressDialog.dismiss();
+                new AlertDialog.Builder(FPVerify.this)
+                        .setMessage("Network Connection error! Please try again later")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
     }

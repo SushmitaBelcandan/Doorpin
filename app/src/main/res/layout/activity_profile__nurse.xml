@@ -139,6 +139,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/view_education"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@id/ll_education"
@@ -148,7 +149,7 @@
                 android:id="@+id/ll_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_education"
+                android:layout_below="@+id/view_education"
                 android:background="@color/purewhite"
                 android:paddingLeft="5dp"
                 android:paddingTop="@dimen/twelve_dp"

@@ -22,8 +22,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.app.doorpin.Activity.EditPatientDetails;
 import com.app.doorpin.R;
+import com.app.doorpin.reference.SessionManager;
+import com.mindorks.placeholderview.PlaceHolderView;
 import com.mindorks.placeholderview.annotations.Click;
 import com.mindorks.placeholderview.annotations.Layout;
 import com.mindorks.placeholderview.annotations.NonReusable;
@@ -37,7 +42,9 @@ import java.util.Locale;
 @NonReusable
 @Layout(R.layout.illness_card_item)
 public class Illness_List_Model {
-
+    //-----------------rootview----------------------------
+    @View(R.id.cv_illness_list)
+    public CardView cv_illness_list;
     //-----------------edit view---------------------------
     @View(R.id.rl_editDisease)
     public RelativeLayout rl_editDisease;
@@ -70,6 +77,15 @@ public class Illness_List_Model {
     @View(R.id.imgbtn_upload)
     public ImageButton imgbtn_upload;
 
+    @View(R.id.card_view_other_doc)
+    public CardView card_view_other_doc;
+
+    @View(R.id.card_view_reports)
+    public CardView card_view_reports;
+
+    @View(R.id.card_view_prsec)
+    public CardView card_view_prsec;
+
     @View(R.id.img_illness_presc)
     public ImageView img_illness_presc;
 
@@ -88,9 +104,16 @@ public class Illness_List_Model {
     @View(R.id.tv_other_doc)
     public TextView tv_other_doc;
 
+    @View(R.id.phv_doc_list)
+    public PlaceHolderView phv_doc_list;
+
     public Context mContext;
+    SessionManager session;
     public Calendar followupCalendar = Calendar.getInstance();
     String strFollowUp;
+    Boolean flag_doc_visible_prsec = true;
+    Boolean flag_doc_visible_reports = true;
+    Boolean flag_doc_visible_other_doc = true;
 
     public Illness_List_Model(Context context) {
         mContext = context;
@@ -98,6 +121,8 @@ public class Illness_List_Model {
 
     @Resolve
     public void onResolved() {
+        //initialize session
+        session = new SessionManager(mContext);
 
     }
 
@@ -203,6 +228,11 @@ public class Illness_List_Model {
             tv_followup_date_val.setText(strFollowUpDate);
         }
     }
+/*
+    @Click(R.id.imgbtn_delete)
+    public void deleteRow() {
+        phv_doc_list.removeView(phv_doc_list.getChildLayoutPosition(cv_illness_list));
+    }*/
 
     @Click(R.id.imgbtn_upload)
     public void uploadDocs() {
@@ -214,5 +244,69 @@ public class Illness_List_Model {
         final AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)); //mae alert bg transparent for custom rounded corner
+    }
+
+    @Click(R.id.card_view_prsec)
+    public void getPresecList() {
+
+        if (flag_doc_visible_prsec == true) {
+            phv_doc_list.setVisibility(android.view.View.VISIBLE);
+            session.saveDocType("Prescription");
+            phv_doc_list.getBuilder()
+                    .setHasFixedSize(false)
+                    .setItemViewCacheSize(10)
+                    .setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+
+            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            flag_doc_visible_prsec = false;
+        } else {
+            phv_doc_list.setVisibility(android.view.View.GONE);
+            flag_doc_visible_prsec = true;
+        }
+    }
+
+    @Click(R.id.card_view_reports)
+    public void getReportsList() {
+        if (flag_doc_visible_reports == true) {
+            phv_doc_list.setVisibility(android.view.View.VISIBLE);
+            session.saveDocType("Reports");
+            phv_doc_list.getBuilder()
+                    .setHasFixedSize(false)
+                    .setItemViewCacheSize(10)
+                    .setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+
+            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            flag_doc_visible_reports = false;
+        } else {
+            phv_doc_list.setVisibility(android.view.View.GONE);
+            flag_doc_visible_reports = true;
+        }
+    }
+
+    @Click(R.id.card_view_other_doc)
+    public void getOtherDocsList() {
+        if (flag_doc_visible_other_doc == true) {
+            phv_doc_list.setVisibility(android.view.View.VISIBLE);
+            session.saveDocType("Other Documents");
+            phv_doc_list.getBuilder()
+                    .setHasFixedSize(false)
+                    .setItemViewCacheSize(10)
+                    .setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+
+            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            flag_doc_visible_other_doc = false;
+        } else {
+            phv_doc_list.setVisibility(android.view.View.GONE);
+            flag_doc_visible_other_doc = true;
+        }
     }
 }

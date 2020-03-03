@@ -16,6 +16,7 @@ public class SessionManager {
     private static final String DOCTOR_NURSE_ID = "doctor_nurse_id";
     private static final String LOG_USR_ID = "user_id";
     private static final String LOGIN_ID = "login_id";
+    private static final String DOC_TYPE = "doc_type";
 
 
     public SessionManager(Context context) {
@@ -56,4 +57,15 @@ public class SessionManager {
     public String getUsrLoginId() {
         return sPref.getString(LOGIN_ID, null);
     }
+
+    //save document type
+    public void saveDocType(String schl_name) {
+        editor.putString(DOC_TYPE, schl_name);
+        editor.commit();
+    }
+
+    public String getDocType() {
+        return sPref.getString(DOC_TYPE, null);
+    }
+
 }

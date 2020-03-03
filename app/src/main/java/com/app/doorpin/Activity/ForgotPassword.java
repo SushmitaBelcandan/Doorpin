@@ -2,12 +2,15 @@ package com.app.doorpin.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +31,7 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
 
     SessionManager session;
 
-    TextView back_to_login;
+    LinearLayout ll_back_to_login;
     Button btn_submit;
     ApiInterface apiInterface;
     ProgressDialog progressDialog;
@@ -43,7 +46,7 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
 
         session = new SessionManager(ForgotPassword.this);
 
-        back_to_login = findViewById(R.id.tv_b_t_login);
+        ll_back_to_login = findViewById(R.id.ll_back_to_login);
         btn_submit = findViewById(R.id.btn_submit);
         et_mail_or_phone = findViewById(R.id.et_mn_or_email_Fp);
 
@@ -52,7 +55,7 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
 
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
-        back_to_login.setOnClickListener(this);
+        ll_back_to_login.setOnClickListener(this);
         btn_submit.setOnClickListener(this);
     }
 
@@ -60,7 +63,7 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.tv_b_t_login:
+            case R.id.ll_back_to_login:
                 startActivity(new Intent(ForgotPassword.this, Login.class));
                 finish();
                 break;
@@ -97,23 +100,50 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onResponse(Call<FP_Model> call, Response<FP_Model> response) {
                 FP_Model fp_model = response.body();
-                String login_id = null;
-                if (fp_model.status.equals("success")) {
-                    List<FP_Model.FPModelDatum> fp_model_list_data = fp_model.response;
-                    for (FP_Model.FPModelDatum fp_data : fp_model_list_data) {
-                        login_id = fp_data.loginId;
+                if(response.isSuccessful()) {
+                    String login_id = "NA";
+                    if (fp_model.status.equals("success")) {
+                        List<FP_Model.FPModelDatum> fp_model_list_data = fp_model.response;
+                        for (FP_Model.FPModelDatum fp_data : fp_model_list_data) {
+                            login_id = fp_data.loginId;
+                            session.saveDoctorNurseId(fp_data.userType);
+                        }
+                        Toast.makeText(ForgotPassword.this, fp_model.message, Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                        startActivity(new Intent(ForgotPassword.this, FPVerify.class).putExtra("LOGIN_ID", login_id));
+                        finish();
+                    } else {
+                        Toast.makeText(ForgotPassword.this, fp_model.message, Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
-                    Toast.makeText(ForgotPassword.this, fp_model.message, Toast.LENGTH_SHORT).show();
+                }else
+                {
                     progressDialog.dismiss();
-                    startActivity(new Intent(ForgotPassword.this, FPVerify.class).putExtra("LOGIN_ID", str_login_id_fp));
-                    finish();
+                    new AlertDialog.Builder(ForgotPassword.this)
+                            .setMessage("Network Connection error! Please try again later")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             }
 
             @Override
             public void onFailure(Call<FP_Model> call, Throwable t) {
-
                 call.cancel();
+                progressDialog.dismiss();
+                new AlertDialog.Builder(ForgotPassword.this)
+                        .setMessage("Network Connection error! Please try again later")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
     }

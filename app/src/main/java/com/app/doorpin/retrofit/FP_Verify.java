@@ -8,8 +8,10 @@ public class FP_Verify {
 
     @SerializedName("user_types")
     public String userTypes;
+
     @SerializedName("login_ids")
     public String loginIds;
+
     @SerializedName("otps")
     public String otps;
 
@@ -20,14 +22,16 @@ public class FP_Verify {
     }
     @SerializedName("status")
     public String status;
+
     @SerializedName("message")
     public String message;
+
     @SerializedName("response")
     public List<FPVerify> response=null;
 
     public class FPVerify{
-        @SerializedName("phone_id")
-        public String phone_id;
+        @SerializedName("login_id")
+        public String login_id;
 
 
 

@@ -17,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Activity.Document_Details_Act"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
             android:name=".Activity.View_Docs_Surg_Patient_Act"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
