@@ -1,5 +1,7 @@
 package com.app.doorpin.Adapters;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.doorpin.Activity.HomePage_Doctor;
 import com.app.doorpin.Activity.PatientDetails;
 import com.app.doorpin.R;
 import com.app.doorpin.models.Patient;
@@ -60,6 +63,11 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), PatientDetails.class);
                     v.getContext().startActivity(intent);
+                    ((HomePage_Doctor) v.getContext()).overridePendingTransition(R.anim.page_turn_in, R.anim.page_turn_out);
+                  /*  AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),
+                            R.animator.page_turn);
+                    set.setTarget(intent);
+                    set.start();*/
                 }
             });
         }

@@ -17,6 +17,7 @@ public class SessionManager {
     private static final String LOG_USR_ID = "user_id";
     private static final String LOGIN_ID = "login_id";
     private static final String DOC_TYPE = "doc_type";
+    private static final String DEVICE_ID = "device_id";
 
 
     public SessionManager(Context context) {
@@ -44,8 +45,19 @@ public class SessionManager {
         return sPref.getString(DOCTOR_NURSE_ID, null);
     }
 
+    //------save device id----------
+    public void saveDeviceId(String device_id) {
+        editor.putString(DEVICE_ID, device_id);
+        editor.commit();
+    }
+
+    public String getDeviceId() {
+        return sPref.getString(DEVICE_ID, null);
+    }
+
     //------save login details----------
     public void saveLoginData(String usrId, String usrLoginId) {
+        editor.putBoolean(IS_LOGIN, true);
         editor.putString(LOG_USR_ID, usrId);
         editor.putString(LOGIN_ID, usrLoginId);
         editor.commit();
@@ -54,6 +66,7 @@ public class SessionManager {
     public String getLoggedUsrId() {
         return sPref.getString(LOG_USR_ID, null);
     }
+
     public String getUsrLoginId() {
         return sPref.getString(LOGIN_ID, null);
     }

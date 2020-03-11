@@ -1,11 +1,16 @@
 package com.app.doorpin.Activity;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -15,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +32,14 @@ import com.app.doorpin.retrofit.ApiInterface;
 import com.app.doorpin.retrofit.FP_Model;
 import com.app.doorpin.retrofit.FP_Verify;
 import com.app.doorpin.retrofit.ResendOtp;
+import com.app.doorpin.sms.AppSignatureHashHelper;
+import com.app.doorpin.sms.OtpReceivedInterface;
+import com.app.doorpin.sms.SmsReceiverOtp;
+import com.google.android.gms.auth.api.phone.SmsRetriever;
+import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
@@ -33,13 +47,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FPVerify extends AppCompatActivity implements View.OnClickListener {
+public class FPVerify extends AppCompatActivity implements View.OnClickListener, OtpReceivedInterface {
 
     SessionManager session;
     ProgressDialog progressDialog;
     public ProgressBar progressBarCircle;
     public CountDownTimer countDownTimer;
     ApiInterface apiInterface;
+    SmsReceiverOtp mSmsBroadcastReceiver;
 
     TextView textTimer, tv_resend_otp;
     Button btn_verify;
@@ -50,10 +65,22 @@ public class FPVerify extends AppCompatActivity implements View.OnClickListener 
     String str_login_id;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp);
+
+        AppSignatureHashHelper appSignatureHelper = new AppSignatureHashHelper(this);
+        appSignatureHelper.getAppSignatures();
+
+        mSmsBroadcastReceiver = new SmsReceiverOtp();
+
+        mSmsBroadcastReceiver.setOnOtpListeners(FPVerify.this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION);
+        getApplicationContext().registerReceiver(mSmsBroadcastReceiver, intentFilter);
+
 
         btn_verify = findViewById(R.id.btn_verify);
         textTimer = findViewById(R.id.tv_timer);
@@ -80,6 +107,52 @@ public class FPVerify extends AppCompatActivity implements View.OnClickListener 
         editTextthree = findViewById(R.id.editTextthree);
         editTextfour = findViewById(R.id.editTextfour);
 
+        startTimer();
+        //avoid textwatcher run on page load and make edittext request default
+        editTextone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                useRequestFocus();
+            }
+        });
+
+        tv_resend_otp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTimer();
+                if (Utils.CheckInternetConnection(getApplicationContext())) {
+                    if (str_login_id.equals("NA") || str_login_id.equals(null)) {
+                        new AlertDialog.Builder(FPVerify.this)
+                                .setMessage("Invalid User Id")
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    } else {
+                        startSMSListener(); //recall service for resend otp
+                        resendOtp(session.getDoctorNurseId(), str_login_id);//recent saved user_type from forgot password
+                    }
+                } else {
+                    new AlertDialog.Builder(FPVerify.this)
+                            .setMessage("Please Check Internet Connection!")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+
+            }
+        });
+
+    }
+
+    private void useRequestFocus() {
         editTextone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -157,42 +230,6 @@ public class FPVerify extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void afterTextChanged(Editable editable) {
                 // We can call api to verify the OTP here or on an explicit button click
-            }
-        });
-
-        startTimer();
-
-
-        tv_resend_otp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startTimer();
-                if (Utils.CheckInternetConnection(getApplicationContext())) {
-                    if (str_login_id.equals("NA") || str_login_id.equals(null)) {
-                        new AlertDialog.Builder(FPVerify.this)
-                                .setMessage("Invalid User Id")
-                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
-                    } else {
-                        resendOtp(session.getDoctorNurseId(), str_login_id);//recent saved user_type from forgot password
-                    }
-                } else {
-                    new AlertDialog.Builder(FPVerify.this)
-                            .setMessage("Please Check Internet Connection!")
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-                }
-
             }
         });
 
@@ -384,6 +421,59 @@ public class FPVerify extends AppCompatActivity implements View.OnClickListener 
         Intent intentForgotPassword = new Intent(FPVerify.this, ForgotPassword.class);
         startActivity(intentForgotPassword);
         finish();
+    }
+
+    //sms retriver service starts and read sms
+    public void startSMSListener() {
+        SmsRetrieverClient mClient = SmsRetriever.getClient(this);
+        Task<Void> mTask = mClient.startSmsRetriever();
+        mTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(FPVerify.this, "SMS Retriever starts", Toast.LENGTH_LONG).show();
+
+            }
+        });
+        mTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(FPVerify.this, "Error", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    @Override
+    public void onOtpReceived(String otp) {
+        Toast.makeText(this, "Otp Received " + otp, Toast.LENGTH_LONG).show();
+        int l = otp.length();
+        String msg1 = otp.substring(l - 4, l - 3);
+        String msg2 = otp.substring(l - 3, l - 2);
+        String msg3 = otp.substring(l - 2, l - 1);
+        String msg4 = otp.substring(l - 1, l);
+
+        editTextone.setText(msg1);
+        editTexttwo.setText(msg2);
+        editTextthree.setText(msg3);
+        editTextfour.setText(msg4);
+    }
+
+    @Override
+    public void onOtpTimeout() {
+        Toast.makeText(this, "Time out, please resend", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onResume() {
+        // LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("otp"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mSmsBroadcastReceiver, new IntentFilter("otp"));
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mSmsBroadcastReceiver);
     }
 
 

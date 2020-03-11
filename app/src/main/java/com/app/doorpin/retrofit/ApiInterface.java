@@ -1,8 +1,12 @@
 package com.app.doorpin.retrofit;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 public interface ApiInterface {
 
@@ -22,9 +26,19 @@ public interface ApiInterface {
     Call<FP_Verify> verifyForgotPassword(@Body FP_Verify fp_verify);
 
     @POST("resetPassword")
-    Call<RP_Model> resetPassword(@Body RP_Model rp_model );
+    Call<RP_Model> resetPassword(@Body RP_Model rp_model);
 
     @POST("resendOTP")
     Call<ResendOtp> resendOtp(@Body ResendOtp resendOtp);
+
+    @POST("surgeryList")
+    Call<SurgList_DP_RetroModel> getDocProfileSurgeryList(@Body SurgList_DP_RetroModel data);
+
+    @POST("logout")
+    Call<Logout_RetroModel> logoutUser(@Body Logout_RetroModel data);
+
+    @Multipart
+    @POST("patientIllnessDocUpload")
+    Call<IllnessDocUpload_RetroModel> uploadDocsIllness(@Part MultipartBody.Part file);
 
 }

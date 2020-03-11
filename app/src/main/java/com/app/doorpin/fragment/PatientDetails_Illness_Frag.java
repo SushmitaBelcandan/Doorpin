@@ -27,7 +27,6 @@ public class PatientDetails_Illness_Frag extends Fragment {
         //empty constructor
     }
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

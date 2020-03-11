@@ -3,6 +3,8 @@ package com.app.doorpin.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -15,6 +17,7 @@ public class Profile_Nurse extends AppCompatActivity implements BottomNavigation
 
     ActionBar toolBar;
     BottomNavigationView bottomNavigationView;
+    ImageView iv_edit_profile;
 
 
     @Override
@@ -27,7 +30,13 @@ public class Profile_Nurse extends AppCompatActivity implements BottomNavigation
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setItemIconTintList(null);
         bottomNavigationView.getMenu().findItem(R.id.navigation_nurse_profile).setChecked(true);//make bottom navigation active for current page
-
+        iv_edit_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Profile_Nurse.this, EditProfile.class).putExtra("PROF", "NURSE"));
+                finish();
+            }
+        });
     }
 
 
@@ -44,8 +53,6 @@ public class Profile_Nurse extends AppCompatActivity implements BottomNavigation
                 startActivity(new Intent(Profile_Nurse.this, Profile_Nurse.class));
                 finish();
                 break;
-
-
         }
 
         return true;

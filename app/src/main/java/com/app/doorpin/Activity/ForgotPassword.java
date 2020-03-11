@@ -1,5 +1,6 @@
 package com.app.doorpin.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -20,6 +21,11 @@ import com.app.doorpin.reference.SessionManager;
 import com.app.doorpin.retrofit.ApiClient;
 import com.app.doorpin.retrofit.ApiInterface;
 import com.app.doorpin.retrofit.FP_Model;
+import com.google.android.gms.auth.api.phone.SmsRetriever;
+import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
@@ -100,7 +106,7 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onResponse(Call<FP_Model> call, Response<FP_Model> response) {
                 FP_Model fp_model = response.body();
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     String login_id = "NA";
                     if (fp_model.status.equals("success")) {
                         List<FP_Model.FPModelDatum> fp_model_list_data = fp_model.response;
@@ -110,14 +116,14 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
                         }
                         Toast.makeText(ForgotPassword.this, fp_model.message, Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
+                        startSMSListener();
                         startActivity(new Intent(ForgotPassword.this, FPVerify.class).putExtra("LOGIN_ID", login_id));
                         finish();
                     } else {
                         Toast.makeText(ForgotPassword.this, fp_model.message, Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     }
-                }else
-                {
+                } else {
                     progressDialog.dismiss();
                     new AlertDialog.Builder(ForgotPassword.this)
                             .setMessage("Network Connection error! Please try again later")
@@ -181,5 +187,22 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
         finish();
     }
 
+    //-----start sms retriver service-----
+    public void startSMSListener() {
+        SmsRetrieverClient mClient = SmsRetriever.getClient(this);
+        Task<Void> mTask = mClient.startSmsRetriever();
+        mTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(ForgotPassword.this, "SMS Retriever starts", Toast.LENGTH_LONG).show();
+            }
+        });
+        mTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ForgotPassword.this, "Error", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
 }

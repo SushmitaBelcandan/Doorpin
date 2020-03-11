@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -40,7 +41,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     Button btn_login;
     ImageView ivHidePass, ivShowPass;
 
-    private String str_login_id, str_password;
+    private String str_login_id, str_password, str_device_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 et_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             }
         });
-
+        //get device id
+        str_device_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
     }
 
@@ -170,7 +172,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             e.printStackTrace();
         }
 
-        final LoginRequest user = new LoginRequest(sessionManager.getDoctorNurseId(), loginId, password, "rithins_device", "111111");
+        final LoginRequest user = new LoginRequest(sessionManager.getDoctorNurseId(), loginId, password, str_device_id, "NA");
         Call<LoginRequest> call = apiInterface.getLogin(user);
         call.enqueue(new Callback<LoginRequest>() {
             @Override
@@ -187,7 +189,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         } else {
                             for (LoginRequest.Login_Datum data : login_datum) {
                                 sessionManager.saveLoginData(data.user_id, data.login_id);
-                                // sessionManager.saveDoctorNurseId(data.user_type);
+                                sessionManager.saveDoctorNurseId(data.user_type);
+                                if (str_device_id.equals(null) || str_device_id.isEmpty()) {
+                                    sessionManager.saveDeviceId("NA");
+                                } else {
+                                    sessionManager.saveDeviceId(str_device_id);
+                                }
                                 if (sessionManager.getDoctorNurseId().equals("1")) {
                                     Toast.makeText(Login.this, loginRequest.message, Toast.LENGTH_SHORT).show();
                                     progressDialog.dismiss();

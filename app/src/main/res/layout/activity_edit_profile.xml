@@ -1,182 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="._.Activity.EditProfile">
+    android:background="@color/purewhite">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_edit_profile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="100dp"
-        android:gravity="center_horizontal">
+        android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="25dp">
-
-    <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:text="@string/name"
-        android:textStyle="bold"/>
-
-    <EditText
-        android:id="@+id/et_name"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:background="@drawable/edit_text_bg"
-        android:hint=""/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="10dp">
-
-    <TextView
-        android:id="@+id/tv_mn"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:text="@string/mobilenumber"
-        android:textStyle="bold"/>
-
-    <EditText
-        android:id="@+id/et_mn"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:background="@drawable/edit_text_bg"
-        android:hint=""/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="10dp">
-
-    <TextView
-        android:id="@+id/tv_ed"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:text="@string/education"
-        android:textStyle="bold"/>
-
-    <EditText
-        android:id="@+id/et_ed"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:background="@drawable/edit_text_bg"
-        android:hint=""/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="10dp">
-
-    <TextView
-        android:id="@+id/tv_spln"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:text="@string/specialiazation"
-        android:textStyle="bold"/>
-
-    <EditText
-        android:id="@+id/et_spln"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:background="@drawable/edit_text_bg"
-        android:hint=""/>
-    </LinearLayout>
-        <LinearLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_edit_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="10dp">
+            android:background="@android:color/white"
+            android:theme="@style/ToolbarColoredBackArrow"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:title="@string/patient_details_toolbar"
+            app:titleTextAppearance="@style/toolbar_title"
+            app:titleTextColor="@color/heading_purple" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-            <TextView
-                android:id="@+id/tv_experience"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:text="@string/experience"
-                android:textStyle="bold"/>
-
-            <EditText
-                android:id="@+id/et_experience"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:background="@drawable/edit_text_bg"
-                android:hint=""/>
-
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:id="@+id/tv_address"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:text="@string/address"
-                android:textStyle="bold"/>
-
-            <EditText
-                android:id="@+id/et_address"
-                android:layout_width="300dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="10dp"
-                android:padding="5dp"
-                android:background="@drawable/edit_text_bg"
-                android:hint=""/>
-        </LinearLayout>
-
-</LinearLayout>
-
-
-<View
-    android:layout_width="match_parent"
-    android:layout_height="5dp"
-    android:layout_above="@+id/btn_save"
-    android:background="@drawable/dottedlines"
-    android:layout_marginBottom="15dp"/>
-
-    <Button
-        android:id="@+id/btn_save"
+    <ScrollView
+        android:id="@+id/scrollViewPatientDetails"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/save"
-        android:textAllCaps="false"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/button_shape"
-        android:textColor="@color/purewhite"
-        android:layout_below="@+id/et_password"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appbar_edit_profile"
+        android:fillViewport="true">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <LinearLayout
+                android:id="@+id/ll_edit_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/thirty_dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/fifteen_dp"
+                android:paddingRight="@dimen/fifteen_dp">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_edit_name"
+                        style="@style/new_patient_title"
+                        android:text="@string/name" />
+
+                    <EditText
+                        android:id="@+id/et_edit_name"
+                        style="@style/new_patient_value"
+                        android:hint=""
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:singleLine="true" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_edit_mobile"
+                        style="@style/new_patient_title"
+                        android:text="@string/mobilenumber" />
+
+                    <EditText
+                        android:id="@+id/et_edit_mobile"
+                        style="@style/new_patient_value"
+                        android:digits="0123456789"
+                        android:hint=""
+                        android:imeOptions="actionNext"
+                        android:inputType="phone"
+                        android:maxLength="10"
+                        android:singleLine="true" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_edit_education"
+                        style="@style/new_patient_title"
+                        android:text="@string/education" />
+
+                    <EditText
+                        android:id="@+id/et_edit_education"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="@dimen/five_dp"
+                        android:background="@drawable/edit_text_bg"
+                        android:digits="qwertyuiopasdfghjklzxcvbnm 1234567890 QWERTYUIOPASDFGHJKLZXCVBNM /-,()"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="top|left"
+                        android:hint=""
+                        android:imeOptions="actionNext"
+                        android:inputType="textMultiLine"
+                        android:padding="@dimen/eight_dp"
+                        android:textColor="@color/black_shade_1"
+                        android:textCursorDrawable="@drawable/text_cursor_color"
+                        android:textSize="@dimen/sixteen_sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_edit_specialization"
+                        style="@style/new_patient_title"
+                        android:text="@string/specialiazation" />
+
+                    <EditText
+                        android:id="@+id/et_edit_specialization"
+                        style="@style/new_patient_value"
+                        android:hint=""
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:singleLine="true" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_edit_experience"
+                        style="@style/new_patient_title"
+                        android:text="@string/experience" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/five_dp"
+                        android:layout_weight="4"
+                        android:gravity="center|left">
+
+                        <Spinner
+                            android:id="@+id/spnr_edit_exp"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_margin="1dp"
+                            android:layout_marginTop="@dimen/three_dp"
+                            android:background="@drawable/marital_spinner_bg"
+                            android:dropDownVerticalOffset="45dp"
+                            android:popupBackground="@drawable/dropdown_popup"
+                            android:spinnerMode="dropdown" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="@dimen/tweenty_dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_edit_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/roboto_medium"
+                        android:gravity="center|left"
+                        android:text="@string/address"
+                        android:textColor="@color/black_shade_1"
+                        android:textSize="@dimen/sixteen_sp" />
+
+                    <EditText
+                        android:id="@+id/et_edit_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="@dimen/five_dp"
+                        android:background="@drawable/edit_text_bg"
+                        android:digits="qwertyuiopasdfghjklzxcvbnm 1234567890 QWERTYUIOPASDFGHJKLZXCVBNM /-,"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="top|left"
+                        android:hint=""
+                        android:imeOptions="actionNext"
+                        android:inputType="textMultiLine"
+                        android:padding="@dimen/eight_dp"
+                        android:textColor="@color/black_shade_1"
+                        android:textCursorDrawable="@drawable/text_cursor_color"
+                        android:textSize="@dimen/sixteen_sp" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:layout_above="@+id/cardview_save"
+                    android:layout_below="@+id/ll_edit_profile"
+                    android:layout_marginTop="@dimen/tweenty_dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/dottedlines"
+                    android:padding="@dimen/ten_dp" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardview_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="@dimen/five_dp"
+                    app:cardUseCompatPadding="true">
+
+                    <Button
+                        android:id="@+id/btn_save"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_shape"
+                        android:fontFamily="@font/roboto_medium"
+                        android:text="@string/save"
+                        android:textAllCaps="false"
+                        android:textColor="@color/purewhite"
+                        android:textSize="@dimen/eighteen_sp" />
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

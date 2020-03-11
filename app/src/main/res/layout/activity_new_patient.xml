@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/purewhite">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_new_patient"
@@ -52,9 +53,12 @@
                         android:text="@string/name" />
 
                     <EditText
-                        android:id="@+id/et_name"
+                        android:id="@+id/et_name_newp"
                         style="@style/new_patient_value"
-                        android:hint="" />
+                        android:hint="Enter patient name"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:singleLine="true" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -69,8 +73,12 @@
                         android:text="@string/email" />
 
                     <EditText
-                        android:id="@+id/et_email"
-                        style="@style/new_patient_value" />
+                        android:id="@+id/et_email_newp"
+                        style="@style/new_patient_value"
+                        android:hint="example@gmail.com"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:singleLine="true" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -87,7 +95,12 @@
                     <EditText
                         android:id="@+id/et_dob"
                         style="@style/new_patient_value"
-                        android:drawableRight="@drawable/ic_action_name" />
+                        android:digits="0123456789/"
+                        android:drawableRight="@drawable/ic_action_name"
+                        android:hint="Enter dob in dd/mm/yyyy"
+                        android:imeOptions="actionNext"
+                        android:inputType="date"
+                        android:singleLine="true" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -102,8 +115,14 @@
                         android:text="@string/mobilenumber" />
 
                     <EditText
-                        android:id="@+id/et_mn"
-                        style="@style/new_patient_value" />
+                        android:id="@+id/et_mobile_newp"
+                        style="@style/new_patient_value"
+                        android:digits="0123456789"
+                        android:hint="Enter 10 digit mobile number"
+                        android:imeOptions="actionNext"
+                        android:inputType="phone"
+                        android:maxLength="10"
+                        android:singleLine="true" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -124,6 +143,7 @@
                         android:textSize="@dimen/sixteen_sp" />
 
                     <RadioGroup
+                        android:id="@+id/rgp_gender_newp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="@dimen/five_dp"
@@ -131,6 +151,7 @@
                         android:orientation="horizontal">
 
                         <RadioButton
+                            android:id="@+id/rbtn_male_newp"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -141,6 +162,7 @@
                             android:textSize="13sp" />
 
                         <RadioButton
+                            android:id="@+id/rbtn_female_newp"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -151,6 +173,7 @@
                             android:textSize="13sp" />
 
                         <RadioButton
+                            android:id="@+id/rbtn_other_newp"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -214,12 +237,17 @@
                         android:textSize="@dimen/sixteen_sp" />
 
                     <EditText
-                        android:id="@+id/et_address"
+                        android:id="@+id/et_address_newp"
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
                         android:layout_marginTop="@dimen/five_dp"
                         android:background="@drawable/edit_text_bg"
+                        android:digits="qwertyuiopasdfghjklzxcvbnm 1234567890 QWERTYUIOPASDFGHJKLZXCVBNM /-,"
                         android:fontFamily="@font/roboto_regular"
+                        android:gravity="top|left"
+                        android:hint="Enter patient address"
+                        android:imeOptions="actionNext"
+                        android:inputType="textMultiLine"
                         android:padding="@dimen/eight_dp"
                         android:textColor="@color/black_shade_1"
                         android:textCursorDrawable="@drawable/text_cursor_color"
@@ -239,8 +267,12 @@
                         android:text="@string/t_o_d" />
 
                     <EditText
-                        android:id="@+id/et_t_o_d"
-                        style="@style/new_patient_value" />
+                        android:id="@+id/et_disease_type_newp"
+                        style="@style/new_patient_value"
+                        android:hint="example: cold"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:singleLine="true" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -257,7 +289,12 @@
                     <EditText
                         android:id="@+id/et_follow_update"
                         style="@style/new_patient_value"
-                        android:drawableRight="@drawable/ic_action_name" />
+                        android:digits="0123456789/"
+                        android:drawableRight="@drawable/ic_action_name"
+                        android:hint="Enter followup date in dd/mm/yyyy"
+                        android:imeOptions="actionDone"
+                        android:inputType="date"
+                        android:singleLine="true" />
                 </LinearLayout>
 
                 <LinearLayout

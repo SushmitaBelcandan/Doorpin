@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class HomePage_RetroModel {
+public class SurgList_DP_RetroModel {
 
     @SerializedName("user_types")
     public String user_types;
@@ -12,7 +12,7 @@ public class HomePage_RetroModel {
     @SerializedName("user_ids")
     public String user_ids;
 
-    public HomePage_RetroModel(String usrType, String usrId) {
+    public SurgList_DP_RetroModel(String usrType, String usrId) {
         this.user_types = usrType;
         this.user_ids = usrId;
     }
@@ -23,19 +23,17 @@ public class HomePage_RetroModel {
     @SerializedName("message")
     public String message;
 
-    @SerializedName("user_name")
-    public String user_name;
-
     @SerializedName("result")
-    public List<HomePage_Datum> response = null;
+    public List<SurgList_DP_Datum> result = null;
 
-    public class HomePage_Datum {
+    public class SurgList_DP_Datum {
 
-        @SerializedName("patient_id")
-        public String patient_id;
+        @SerializedName("surgery_id")
+        public String surgery_id;
 
-        @SerializedName("patient_name")
-        public String patient_name;
+        @SerializedName("surgery_name")
+        public String surgery_name;
     }
+
 
 }

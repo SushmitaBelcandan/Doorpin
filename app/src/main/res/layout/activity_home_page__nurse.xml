@@ -22,21 +22,21 @@
                 android:id="@+id/tvWelcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
                 android:paddingBottom="3dp"
                 android:text="Welcome!"
                 android:textColor="@color/purewhite"
-                android:textSize="@dimen/fourteen_sp"
-                android:fontFamily="@font/roboto_regular"/>
+                android:textSize="@dimen/fourteen_sp" />
 
             <TextView
                 android:id="@+id/tvUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvWelcome"
+                android:fontFamily="@font/roboto_regular"
                 android:text="@string/nurse_name"
                 android:textColor="@color/purewhite"
-                android:textSize="@dimen/sixteen_sp"
-                android:fontFamily="@font/roboto_regular"/>
+                android:textSize="@dimen/sixteen_sp" />
 
             <ImageButton
                 android:id="@+id/imgBtnLogoutNurse"
@@ -64,14 +64,14 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@null"
-                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890-/\+"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890"
+                android:fontFamily="@font/roboto_regular"
                 android:hint="@string/search_by_name_or_patient_id"
                 android:padding="@dimen/five_dp"
                 android:singleLine="true"
                 android:textColor="@color/heading_purple"
                 android:textCursorDrawable="@drawable/text_cursor_color"
-                android:textSize="@dimen/fourteen_sp"
-                android:fontFamily="@font/roboto_regular"/>
+                android:textSize="@dimen/fourteen_sp" />
 
             <LinearLayout
                 android:id="@+id/llBtnSearchNurse"
@@ -161,8 +161,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/navigation_nurse"
-        android:background="@color/purewhite"/>
+        android:background="@color/purewhite"
+        app:menu="@menu/navigation_nurse" />
 
 
 </RelativeLayout>

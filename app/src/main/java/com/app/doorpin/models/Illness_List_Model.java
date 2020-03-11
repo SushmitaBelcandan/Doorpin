@@ -241,6 +241,19 @@ public class Illness_List_Model {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext, R.style.AlertDialogStyle);
         alertDialogBuilder.setView(promptView);
 
+        TextView tv_upload_presec = (TextView) promptView.findViewById(R.id.tv_upload_presec);
+        TextView tv_upload_report = (TextView) promptView.findViewById(R.id.tv_upload_report);
+        TextView tv_upload_other_doc = (TextView) promptView.findViewById(R.id.tv_upload_other_doc);
+
+        //-----------------------------------upload document action event------------------------
+        tv_upload_presec.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+
+            }
+        });
+
+
         final AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)); //mae alert bg transparent for custom rounded corner

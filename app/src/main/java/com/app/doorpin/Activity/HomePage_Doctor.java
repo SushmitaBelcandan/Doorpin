@@ -1,9 +1,12 @@
 package com.app.doorpin.Activity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +31,7 @@ import com.app.doorpin.reference.SessionManager;
 import com.app.doorpin.retrofit.ApiClient;
 import com.app.doorpin.retrofit.ApiInterface;
 import com.app.doorpin.retrofit.HomePage_RetroModel;
+import com.app.doorpin.retrofit.Logout_RetroModel;
 import com.app.doorpin.retrofit.SearchPatient_RetroModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -124,7 +128,13 @@ public class HomePage_Doctor extends AppCompatActivity implements BottomNavigati
                     if (str_search_key.equals(null) || str_search_key.isEmpty()) {
                         Toast.makeText(HomePage_Doctor.this, "Not a Valid Keyword", Toast.LENGTH_SHORT).show();
                     } else {
-                        searchPatient(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId(), "56", str_search_key);
+                        boolean digitsOnly = TextUtils.isDigitsOnly(str_search_key);
+                        if (digitsOnly == true) {
+                            searchPatient(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId(), str_search_key, "NA");
+                        } else {
+                            searchPatient(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId(), "NA", str_search_key);
+
+                        }
                     }
 
                 } else {
@@ -136,13 +146,86 @@ public class HomePage_Doctor extends AppCompatActivity implements BottomNavigati
         imgBtnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentLogin = new Intent(HomePage_Doctor.this, Login.class);
-                startActivity(intentLogin);
-                sessionManager.logoutUser();
-                finish();
+                if (sessionManager.getDeviceId().equals("NA")) {
+                    new AlertDialog.Builder(HomePage_Doctor.this)
+                            .setMessage("Please Try Again")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                } else {
+                    logoutUser(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId(), sessionManager.getDeviceId());
+                }
             }
         });
 
+    }
+
+    private void logoutUser(String str_usr_type, String str_usr_id, String str_device_id) {
+        try {
+            progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Logout_RetroModel logout_model = new Logout_RetroModel(str_usr_type, str_usr_id, str_device_id);
+        Call<Logout_RetroModel> call_logout = apiInterface.logoutUser(logout_model);
+        call_logout.enqueue(new Callback<Logout_RetroModel>() {
+            @Override
+            public void onResponse(Call<Logout_RetroModel> call, Response<Logout_RetroModel> response) {
+                Logout_RetroModel logout_resources = response.body();
+                if (response.isSuccessful()) {
+                    if (logout_resources.status1.equals("success")) {
+                        progressDialog.dismiss();
+                        Toast.makeText(HomePage_Doctor.this, logout_resources.message1, Toast.LENGTH_SHORT).show();
+                        Intent intentLogin = new Intent(HomePage_Doctor.this, Login.class);
+                        startActivity(intentLogin);
+                        sessionManager.logoutUser();
+                        finish();
+                    } else {
+                        progressDialog.dismiss();
+                        new AlertDialog.Builder(HomePage_Doctor.this)
+                                .setMessage("Please Try Again")
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    }
+                } else {
+                    //response id getting failed
+                    progressDialog.dismiss();
+                    new AlertDialog.Builder(HomePage_Doctor.this)
+                            .setMessage("Please Try Again")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Logout_RetroModel> call, Throwable t) {
+                call.cancel();
+                progressDialog.dismiss();
+                new AlertDialog.Builder(HomePage_Doctor.this)
+                        .setMessage("Please Try Again")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
     }
 
     private void searchPatient(String usr_type, String usr_id, String patient_id, String str_search_data) {
@@ -195,9 +278,9 @@ public class HomePage_Doctor extends AppCompatActivity implements BottomNavigati
                         Toast.makeText(HomePage_Doctor.this, search_resources.message, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    llNetworkError.setVisibility(View.VISIBLE);
-                    llNoData.setVisibility(View.GONE);
+                    llNoData.setVisibility(View.VISIBLE);
                     rv_patient.setVisibility(View.GONE);
+                    llNetworkError.setVisibility(View.GONE);
                     progressDialog.dismiss();
                 }
             }

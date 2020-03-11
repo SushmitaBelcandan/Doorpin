@@ -11,34 +11,34 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.doorpin.R;
 import com.app.doorpin.models.SurgeriesDone;
 
+import java.util.ArrayList;
 
-public class SurgeryDoneAdapter extends RecyclerView.Adapter<SurgeryDoneAdapter.ViewHolder>{
 
-    SurgeriesDone surgerydone[];
-    public SurgeryDoneAdapter(SurgeriesDone[] surgerydone){
-        this.surgerydone=surgerydone;
+public class SurgeryDoneAdapter extends RecyclerView.Adapter<SurgeryDoneAdapter.ViewHolder> {
+
+    ArrayList<String> arrListSurg;
+
+    public SurgeryDoneAdapter(ArrayList<String> arr_list_surg) {
+        this.arrListSurg = arr_list_surg;
     }
 
     @Override
     public SurgeryDoneAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View listItem= layoutInflater.inflate(R.layout.surgeries_done_item, parent, false);
+        View listItem = layoutInflater.inflate(R.layout.surgeries_done_item, parent, false);
         SurgeryDoneAdapter.ViewHolder viewHolder = new SurgeryDoneAdapter.ViewHolder(listItem);
         return viewHolder;
     }
 
 
-
     @Override
     public void onBindViewHolder(@NonNull SurgeryDoneAdapter.ViewHolder holder, int position) {
-
-        final SurgeriesDone surgeries=surgerydone[position];
-        holder.tv_surgerydone.setText(surgerydone[position].getSurgeriesDone());
+        holder.tv_surgerydone.setText(arrListSurg.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return surgerydone.length;
+        return arrListSurg.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
