@@ -18,6 +18,8 @@ public class SessionManager {
     private static final String LOGIN_ID = "login_id";
     private static final String DOC_TYPE = "doc_type";
     private static final String DEVICE_ID = "device_id";
+    private static final String PATIENT_ID_HOME = "patient_id_home";
+    private static final String PATIENT_NAME_HOME = "patient_name_home";
 
 
     public SessionManager(Context context) {
@@ -33,6 +35,21 @@ public class SessionManager {
     public void logoutUser() {
         editor.clear();
         editor.commit();
+    }
+
+    //------save patient id home page----------
+    public void savePatientIdHome(String patient_id, String patient_name) {
+        editor.putString(PATIENT_ID_HOME, patient_id);
+        editor.putString(PATIENT_NAME_HOME, patient_name);
+        editor.commit();
+    }
+
+    public String getPatientIdHome() {
+        return sPref.getString(PATIENT_ID_HOME, null);
+    }
+
+    public String getPatientNameHome() {
+        return sPref.getString(PATIENT_NAME_HOME, null);
     }
 
     //------save doctor and nurse id----------

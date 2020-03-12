@@ -41,4 +41,10 @@ public interface ApiInterface {
     @POST("patientIllnessDocUpload")
     Call<IllnessDocUpload_RetroModel> uploadDocsIllness(@Part MultipartBody.Part file);
 
+    @POST("patientPersonalDetails")
+    Call<Patient_PersInfo_RetroModel> getPersonalInfo(@Body Patient_PersInfo_RetroModel data);
+
+    @POST("patientPersonalDetailsEdit")
+    Call<Edit_PersInfo_Retro_Model> updatePersonalInfo(@Body Edit_PersInfo_Retro_Model data);
+
 }

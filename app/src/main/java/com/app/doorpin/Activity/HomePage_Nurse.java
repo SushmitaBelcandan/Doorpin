@@ -267,7 +267,7 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
                                 }
 
                             }
-                            PatientAdapter adapter = new PatientAdapter(arrlist_patient_id, arrlist_patient_name);
+                            PatientAdapter adapter = new PatientAdapter(getApplicationContext(),arrlist_patient_id, arrlist_patient_name);
                             rv_patient_nurse.setAdapter(adapter);
                             progressDialog.dismiss();
                             Toast.makeText(HomePage_Nurse.this, search_resources.message, Toast.LENGTH_SHORT).show();
@@ -342,7 +342,7 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
                                 }
 
                             }
-                            PatientAdapter adapter = new PatientAdapter(arrlist_patient_id, arrlist_patient_name);
+                            PatientAdapter adapter = new PatientAdapter(getApplicationContext(),arrlist_patient_id, arrlist_patient_name);
                             rv_patient_nurse.setAdapter(adapter);
                             progressDialog.dismiss();
                             //  Toast.makeText(HomePage_Nurse.this, homepage_resources.message, Toast.LENGTH_SHORT).show();

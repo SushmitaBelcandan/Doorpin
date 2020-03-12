@@ -64,7 +64,7 @@
                         android:padding="@dimen/ten_dp">
 
                         <TextView
-                            android:id="@+id/patientname"
+                            android:id="@+id/tv_patientname"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@+id/img_spiral"

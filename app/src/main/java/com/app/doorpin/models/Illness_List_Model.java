@@ -246,13 +246,13 @@ public class Illness_List_Model {
         TextView tv_upload_other_doc = (TextView) promptView.findViewById(R.id.tv_upload_other_doc);
 
         //-----------------------------------upload document action event------------------------
-        tv_upload_presec.setOnClickListener(new android.view.View.OnClickListener() {
+       /* tv_upload_presec.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
 
             }
         });
-
+*/
 
         final AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();

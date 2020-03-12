@@ -12,22 +12,32 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.app.doorpin.Adapters.PatientDetails_Adapter;
 import com.app.doorpin.R;
+import com.app.doorpin.reference.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 public class PatientDetails extends AppCompatActivity {
 
+    SessionManager session;
     Toolbar toolbar_patient_details;
     //   FloatingActionButton fab_illness;
     TabLayout tabPatientDetails;
     ViewPager viewPager;
 
+    TextView tv_patientname, tv_patient_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.patient_details);
+
+        session = new SessionManager(PatientDetails.this);
+
         toolbar_patient_details = findViewById(R.id.toolbar_patient_details);
-        //toolbar
+
+        tv_patientname = findViewById(R.id.tv_patientname);
+        tv_patient_id = findViewById(R.id.tv_patient_id);
+        //------------------------------------------------toolbar---------------------------
         setSupportActionBar(toolbar_patient_details);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -39,7 +49,7 @@ public class PatientDetails extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        //tablayout
+        //-----------------------------------------------tablayout---------------------------
         tabPatientDetails = findViewById(R.id.tabPatientDetails);
         viewPager = findViewById(R.id.viewPager);
         //fab_illness = findViewById(R.id.fab_illness_details);
@@ -81,7 +91,19 @@ public class PatientDetails extends AppCompatActivity {
 
             }
         });
+        //-----------show patient info------
+        getPatientIdentity();
 
+    }
+
+    private void getPatientIdentity() {
+        if (!session.getPatientIdHome().equals("NA")) {
+            tv_patient_id.setText("Patient Id" + " - " + session.getPatientIdHome());
+            tv_patientname.setText(session.getPatientNameHome());
+        } else {
+            tv_patient_id.setText("");
+            tv_patientname.setText("");
+        }
     }
 
     /*  @Override

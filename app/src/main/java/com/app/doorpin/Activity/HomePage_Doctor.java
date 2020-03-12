@@ -265,7 +265,7 @@ public class HomePage_Doctor extends AppCompatActivity implements BottomNavigati
                                 }
 
                             }
-                            PatientAdapter adapter = new PatientAdapter(arrlist_patient_id, arrlist_patient_name);
+                            PatientAdapter adapter = new PatientAdapter(getApplicationContext(),arrlist_patient_id, arrlist_patient_name);
                             rv_patient.setAdapter(adapter);
                             progressDialog.dismiss();
                             Toast.makeText(HomePage_Doctor.this, search_resources.message, Toast.LENGTH_SHORT).show();
@@ -340,7 +340,7 @@ public class HomePage_Doctor extends AppCompatActivity implements BottomNavigati
                                 }
 
                             }
-                            PatientAdapter adapter = new PatientAdapter(arrlist_patient_id, arrlist_patient_name);
+                            PatientAdapter adapter = new PatientAdapter(getApplicationContext(),arrlist_patient_id, arrlist_patient_name);
                             rv_patient.setAdapter(adapter);
                             progressDialog.dismiss();
                             //   Toast.makeText(HomePage_Doctor.this, homepage_resources.message, Toast.LENGTH_SHORT).show();
