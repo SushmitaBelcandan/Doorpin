@@ -47,4 +47,11 @@ public interface ApiInterface {
     @POST("patientPersonalDetailsEdit")
     Call<Edit_PersInfo_Retro_Model> updatePersonalInfo(@Body Edit_PersInfo_Retro_Model data);
 
+    @POST("patientIllnessDetails")
+    Call<Illness_List_Retro_Model> getIllnessList(@Body Illness_List_Retro_Model data);
+
+    @POST("patientIllnessDiseaseEdit")
+    Call<Edit_Disease_Retro_Model> updateDisease(@Body Edit_Disease_Retro_Model data);
+
+
 }

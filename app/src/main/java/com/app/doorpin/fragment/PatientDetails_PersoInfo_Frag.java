@@ -68,7 +68,7 @@ public class PatientDetails_PersoInfo_Frag extends Fragment {
                     sessionManager.getLoggedUsrId(), sessionManager.getPatientIdHome());
         } else {
             //do nothing
-            Toast.makeText(getActivity(), "Connection Error! Please try again later", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Something went wrong! Please try again", Toast.LENGTH_SHORT).show();
         }
 
         init();
