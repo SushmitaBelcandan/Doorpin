@@ -144,17 +144,17 @@
     </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_homepage_doctor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btm_navigation_view"
-        android:layout_alignParentRight="true"
-        android:layout_margin="@dimen/fifteen_dp"
-        android:background="@color/orange"
-        android:backgroundTint="@color/orange"
-        android:src="@drawable/add"
-        app:elevation="3dp"
-        app:maxImageSize="50dp" />
+    android:id="@+id/fab_homepage_doctor"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/btm_navigation_view"
+    android:layout_alignParentRight="true"
+    android:layout_margin="@dimen/fifteen_dp"
+    android:background="@color/orange"
+    android:backgroundTint="@color/orange"
+    android:src="@drawable/add"
+    app:elevation="3dp"
+    app:maxImageSize="50dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/btm_navigation_view"

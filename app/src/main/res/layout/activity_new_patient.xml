@@ -291,10 +291,33 @@
                         style="@style/new_patient_value"
                         android:digits="0123456789/"
                         android:drawableRight="@drawable/ic_action_name"
-                        android:hint="Enter followup date in dd/mm/yyyy"
+                        android:hint="Enter follow up date in dd/mm/yyyy"
                         android:imeOptions="actionDone"
                         android:inputType="date"
                         android:singleLine="true" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_recomnd_doct"
+                        style="@style/new_patient_title"
+                        android:text="@string/recommended_doctor" />
+
+                    <Spinner
+                        android:id="@+id/spnr_recomnd_doct"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="1dp"
+                        android:layout_marginTop="@dimen/three_dp"
+                        android:background="@drawable/marital_spinner_bg"
+                        android:dropDownVerticalOffset="45dp"
+                        android:popupBackground="@drawable/dropdown_popup"
+                        android:spinnerMode="dropdown" />
                 </LinearLayout>
 
                 <LinearLayout

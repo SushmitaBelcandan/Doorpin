@@ -230,7 +230,7 @@
                     android:layout_gravity="center"
                     android:elevation="@dimen/five_dp"
                     app:cardBackgroundColor="@color/orange"
-                    app:cardCornerRadius="@dimen/eight_dp"
+                    app:cardCornerRadius="5dp"
                     app:cardElevation="@dimen/five_dp">
 
                     <LinearLayout
@@ -270,7 +270,7 @@
                     android:layout_gravity="center"
                     android:elevation="@dimen/five_dp"
                     app:cardBackgroundColor="@color/orange"
-                    app:cardCornerRadius="@dimen/eight_dp"
+                    app:cardCornerRadius="5dp"
                     app:cardElevation="@dimen/five_dp">
 
                     <LinearLayout
@@ -310,7 +310,7 @@
                     android:layout_gravity="center"
                     android:elevation="@dimen/five_dp"
                     app:cardBackgroundColor="@color/orange"
-                    app:cardCornerRadius="@dimen/eight_dp"
+                    app:cardCornerRadius="5dp"
                     app:cardElevation="@dimen/five_dp">
 
                     <LinearLayout

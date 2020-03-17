@@ -137,8 +137,8 @@
         </LinearLayout>
     </LinearLayout>
 
-   <!-- <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_illness_details"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_patient_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -148,5 +148,5 @@
         android:backgroundTint="@color/orange"
         android:src="@drawable/add"
         app:elevation="3dp"
-        app:maxImageSize="50dp" />-->
+        app:maxImageSize="50dp" />
 </RelativeLayout>

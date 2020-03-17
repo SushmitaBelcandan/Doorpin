@@ -1,5 +1,6 @@
 package com.app.doorpin.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,7 @@ public class PatientDetails extends AppCompatActivity {
 
     SessionManager session;
     Toolbar toolbar_patient_details;
-    //   FloatingActionButton fab_illness;
+    FloatingActionButton fab_illness;
     TabLayout tabPatientDetails;
     ViewPager viewPager;
 
@@ -52,7 +53,7 @@ public class PatientDetails extends AppCompatActivity {
         //-----------------------------------------------tablayout---------------------------
         tabPatientDetails = findViewById(R.id.tabPatientDetails);
         viewPager = findViewById(R.id.viewPager);
-        //fab_illness = findViewById(R.id.fab_illness_details);
+        fab_illness = findViewById(R.id.fab_patient_details);
 
         tabPatientDetails.addTab(tabPatientDetails.newTab().setText(getResources().getString(R.string.personal_info)));
         tabPatientDetails.addTab(tabPatientDetails.newTab().setText("Illness"));
@@ -93,6 +94,16 @@ public class PatientDetails extends AppCompatActivity {
         });
         //-----------show patient info------
         getPatientIdentity();
+        //add disease
+        fab_illness.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentNewDiease = new Intent(PatientDetails.this, AddDisease.class);
+                startActivity(intentNewDiease);
+                finish();
+
+            }
+        });
 
     }
 

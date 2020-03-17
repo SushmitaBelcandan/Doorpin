@@ -53,5 +53,9 @@ public interface ApiInterface {
     @POST("patientIllnessDiseaseEdit")
     Call<Edit_Disease_Retro_Model> updateDisease(@Body Edit_Disease_Retro_Model data);
 
+    //dummy model
+    @POST("newPatient")
+    Call<New_Patient_Retro_Model> addPatient(@Body New_Patient_Retro_Model data);
+
 
 }

@@ -36,7 +36,7 @@ public class NewPatient extends AppCompatActivity implements View.OnClickListene
 
     Button btn_add;
     LinearLayout llcapturePrescription, lluploadDocs;
-    Spinner spnr_marital_status;
+    Spinner spnr_marital_status,spnr_recomnd_doct;
     EditText et_dob, et_follow_update;
     RadioGroup rgp_gender_newp;
     RadioButton rbtn_male_newp, rbtn_female_newp, rbtn_other_newp;
@@ -70,6 +70,7 @@ public class NewPatient extends AppCompatActivity implements View.OnClickListene
         et_address_newp = findViewById(R.id.et_address_newp);
         et_disease_type_newp = findViewById(R.id.et_disease_type_newp);
         et_follow_update = findViewById(R.id.et_follow_update);
+        spnr_recomnd_doct = findViewById(R.id.spnr_recomnd_doct);
 
         //toolbar
         setSupportActionBar(toolbar_new_patient);

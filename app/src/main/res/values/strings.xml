@@ -36,7 +36,8 @@
     <string name="gender">Gender</string>
     <string name="marital_status">Marital Status</string>
     <string name="t_o_d">Type of disease</string>
-    <string name="fw_up">Follow Update</string>
+    <string name="fw_up">Follow Up Date</string>
+    <string name="recommended_doctor">Recommended Doctor</string>
     <string name="patient_age">Patient\'s Age</string>
     <string name="edit">Edit</string>
     <string name="doctor_name">Meeta Sharma</string>
@@ -80,4 +81,6 @@
     <string name="new_surgery_toolbar_title">New Surgery</string>
     <!--New Patient-->
     <string name="new_patient_toolbar">New Patient</string>
+    <!-- add disease-->
+    <string name="add_disease_tool_bar_title">Add Disease</string>
 </resources>

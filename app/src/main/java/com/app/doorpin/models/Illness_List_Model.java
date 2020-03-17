@@ -136,7 +136,6 @@ public class Illness_List_Model {
 
     String str1_illness_id, str1_illness_name, str1_followup_date, str1_prsec_id, str1_prsec_link, str1_report_id, str1_report_link, str1_other_docs_id, str1_other_docs_link;
     String str1_patient_id;
-    float ImageRadius = 16.0f;
 
     public Illness_List_Model(Context context, String str_illness_id, String str_illness_name, String str_followup_date,
                               String str_prsec_id, String str_prsec_link, String str_report_id, String str_report_link,
@@ -193,20 +192,10 @@ public class Illness_List_Model {
 
                 Glide.with(mContext).load(str1_prsec_link).into(img_illness_presc);
             } else {
-                Bitmap ImageBit = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.download_sample);
-                img_illness_presc.setImageBitmap(ImageBit);
-                RoundedBitmapDrawable RBD = RoundedBitmapDrawableFactory.create(mContext.getResources(), ImageBit);
-                RBD.setCornerRadius(ImageRadius);
-                RBD.setAntiAlias(true);
-                img_illness_presc.setImageDrawable(RBD);
+                Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_presc);
             }
         } else {
-            Bitmap ImageBit = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.download_sample);
-            img_illness_presc.setImageBitmap(ImageBit);
-            RoundedBitmapDrawable RBD = RoundedBitmapDrawableFactory.create(mContext.getResources(), ImageBit);
-            RBD.setCornerRadius(ImageRadius);
-            RBD.setAntiAlias(true);
-            img_illness_presc.setImageDrawable(RBD);
+            Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_presc);
         }
         //report link
         if (!str1_report_id.equals("null") && !str1_report_id.equals(null)
@@ -216,20 +205,10 @@ public class Illness_List_Model {
 
                 Glide.with(mContext).load(str1_report_link).into(img_illness_reports);
             } else {
-                Bitmap ImageBit = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.download_sample);
-                img_illness_reports.setImageBitmap(ImageBit);
-                RoundedBitmapDrawable RBD = RoundedBitmapDrawableFactory.create(mContext.getResources(), ImageBit);
-                RBD.setCornerRadius(ImageRadius);
-                RBD.setAntiAlias(true);
-                img_illness_reports.setImageDrawable(RBD);
+                Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_presc);
             }
         } else {
-            Bitmap ImageBit = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.download_sample);
-            img_illness_reports.setImageBitmap(ImageBit);
-            RoundedBitmapDrawable RBD = RoundedBitmapDrawableFactory.create(mContext.getResources(), ImageBit);
-            RBD.setCornerRadius(ImageRadius);
-            RBD.setAntiAlias(true);
-            img_illness_reports.setImageDrawable(RBD);
+            Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_presc);
         }
         //other docs link
         if (!str1_other_docs_id.equals("null") && !str1_other_docs_id.equals(null)
@@ -239,20 +218,10 @@ public class Illness_List_Model {
 
                 Glide.with(mContext).load(str1_other_docs_link).into(img_illness_other_doc);
             } else {
-                Bitmap ImageBit = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.download_sample);
-                img_illness_other_doc.setImageBitmap(ImageBit);
-                RoundedBitmapDrawable RBD = RoundedBitmapDrawableFactory.create(mContext.getResources(), ImageBit);
-                RBD.setCornerRadius(ImageRadius);
-                RBD.setAntiAlias(true);
-                img_illness_other_doc.setImageDrawable(RBD);
+                Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_presc);
             }
         } else {
-            Bitmap ImageBit = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.download_sample);
-            img_illness_other_doc.setImageBitmap(ImageBit);
-            RoundedBitmapDrawable RBD = RoundedBitmapDrawableFactory.create(mContext.getResources(), ImageBit);
-            RBD.setCornerRadius(ImageRadius);
-            RBD.setAntiAlias(true);
-            img_illness_other_doc.setImageDrawable(RBD);
+            Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_presc);
         }
     }
 
