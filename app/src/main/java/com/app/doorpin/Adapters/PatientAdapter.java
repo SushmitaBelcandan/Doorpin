@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.doorpin.Activity.HomePage_Doctor;
+import com.app.doorpin.Activity.HomePage_Nurse;
 import com.app.doorpin.Activity.PatientDetails;
 import com.app.doorpin.R;
 import com.app.doorpin.models.Patient;
@@ -26,11 +27,13 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
     SessionManager session;
     ArrayList<String> patient_id;
     ArrayList<String> patient_name;
+    ArrayList<String> display_id;
 
-    public PatientAdapter(Context context, ArrayList<String> patientId, ArrayList<String> patientName) {
+    public PatientAdapter(Context context, ArrayList<String> patientId, ArrayList<String> patientName, ArrayList<String> displayId) {
         this.mContext = context;
         this.patient_id = patientId;
         this.patient_name = patientName;
+        this.display_id = displayId;
     }
 
     @Override
@@ -44,18 +47,25 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         session = new SessionManager(mContext);
-        holder.tv_patientid.setText("Patient Id-" + " " + patient_id.get(position));
+        holder.tv_patientid.setText("Patient Id-" + " " + display_id.get(position));
         holder.tv_patientname.setText(patient_name.get(position));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!patient_id.isEmpty() && !patient_id.equals("null") && !patient_id.equals(null)) {
-                    session.savePatientIdHome(String.valueOf(patient_id.get(position)), String.valueOf(patient_name.get(position)));
+
+                    session.savePatientIdHome(String.valueOf(patient_id.get(position)), String.valueOf(patient_name.get(position)),
+                            String.valueOf(display_id.get(position)));
                     Intent intent = new Intent(v.getContext(), PatientDetails.class);
                     v.getContext().startActivity(intent);
-                    ((HomePage_Doctor) v.getContext()).overridePendingTransition(R.anim.page_turn_in, R.anim.page_turn_out);
+
+                    if (session.getDoctorNurseId().equals("1")) {
+                        ((HomePage_Doctor) v.getContext()).overridePendingTransition(R.anim.page_turn_in, R.anim.page_turn_out);
+                    } else {
+                        ((HomePage_Nurse) v.getContext()).overridePendingTransition(R.anim.page_turn_in, R.anim.page_turn_out);
+                    }
                 } else {
-                    session.savePatientIdHome("NA", "NA");
+                    session.savePatientIdHome("NA", "NA", "NA");
                 }
                   /*  AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),
                             R.animator.page_turn);

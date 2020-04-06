@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -23,6 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.app.doorpin.Adapters.Utils;
 import com.app.doorpin.R;
 import com.app.doorpin.fragment.PatientDetails_PersoInfo_Frag;
 import com.app.doorpin.models.SetDateonCalendar;
@@ -32,6 +34,10 @@ import com.app.doorpin.retrofit.ApiInterface;
 import com.app.doorpin.retrofit.Edit_PersInfo_Retro_Model;
 import com.app.doorpin.retrofit.Patient_PersInfo_RetroModel;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,6 +62,7 @@ public class EditPatientDetails extends AppCompatActivity implements View.OnClic
     RadioGroup rgp_gender;
     RadioButton rbtn_male, rbtn_female, rbtn_other;
     Spinner spnr_marital_status;
+    ImageView ivCalenderDob;
 
     ArrayList<String> arrList_marital_status;
     String strMaritalStatus;
@@ -104,6 +111,7 @@ public class EditPatientDetails extends AppCompatActivity implements View.OnClic
         rbtn_female = findViewById(R.id.rbtn_female);
         rbtn_other = findViewById(R.id.rbtn_other);
         spnr_marital_status = findViewById(R.id.spnr_marital_status);
+        ivCalenderDob = findViewById(R.id.ivCalenderDob);
 
         btn_save.setOnClickListener(this);
         //  setDateonCalendar = new SetDateonCalendar(et_edit_dob, this);
@@ -261,7 +269,7 @@ public class EditPatientDetails extends AppCompatActivity implements View.OnClic
 
         //calender select--------------------------------------------------------------------
         et_edit_dob.setFocusable(false);
-        et_edit_dob.setOnClickListener(new android.view.View.OnClickListener() {
+        ivCalenderDob.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
                 // TODO Auto-generated method stub
@@ -284,16 +292,21 @@ public class EditPatientDetails extends AppCompatActivity implements View.OnClic
     }
 
     private void getPatientIdentity() {
-        if (!sessionManager.getPatientIdHome().equals("NA")) {
-            tv_patient_id.setText("Patient Id" + " - " + sessionManager.getPatientIdHome());
+        if (!sessionManager.getDisplayIdHome().equals("NA")) {
+            tv_patient_id.setText("Patient Id" + " - " + sessionManager.getDisplayIdHome());
             tv_patientname.setText(sessionManager.getPatientNameHome());
 
             Intent oIntent = getIntent();//for page flag
             String str_intent_p_id = oIntent.getExtras().getString("PATIENT_ID");
-            if (!str_intent_p_id.equals("null") && !str_intent_p_id.equals(null) && !str_intent_p_id.isEmpty() && !str_intent_p_id.equals("NA")) {
-                getPersonalInformation(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId(), str_intent_p_id);
+
+            if (Utils.CheckInternetConnection(getApplicationContext())) {
+                if (!str_intent_p_id.equals("null") && !str_intent_p_id.equals(null) && !str_intent_p_id.isEmpty() && !str_intent_p_id.equals("NA")) {
+                    getPersonalInformation(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId(), str_intent_p_id);
+                } else {
+                    //do not display data
+                }
             } else {
-                //do not display data
+                Toast.makeText(EditPatientDetails.this, "Please Check Internet Connection!", Toast.LENGTH_SHORT).show();
             }
         } else {
             tv_patient_id.setText("");
@@ -408,16 +421,30 @@ public class EditPatientDetails extends AppCompatActivity implements View.OnClic
                         Toast.makeText(EditPatientDetails.this, patientPersonalInfoRequest.message, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    progressDialog.dismiss();
-                    new AlertDialog.Builder(EditPatientDetails.this)
-                            .setMessage("Network Connection error! Please try again later")
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+                    if (response.code() == 400) {
+                        if (!response.isSuccessful()) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response.errorBody().string());
+                                String userMessage = jsonObject.getString("status");
+                                String internalMessage = jsonObject.getString("message");
+                                progressDialog.dismiss();
+                                new android.app.AlertDialog.Builder(EditPatientDetails.this)
+                                        .setMessage(internalMessage)
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 }
             }
 
@@ -450,37 +477,41 @@ public class EditPatientDetails extends AppCompatActivity implements View.OnClic
                 str_patient_gender = getGenderName();//getting selected gender associated id/value
                 str_patient_marital_status = String.valueOf(patient_marital_status_id).trim();
                 str_patient_address = et_address.getText().toString().trim();
+                if (Utils.CheckInternetConnection(getApplicationContext())) {
 
-                if (validateForm(str_patient_email, str_patient_dob, str_patient_mobile, rgp_gender, str_patient_marital_status,
-                        str_patient_address)) {
-                    //remove error mark when no fields are empty
-                    et_email.setError(null);
-                    et_edit_dob.setError(null);
-                    et_mobile.setError(null);
-                    et_address.setError(null);
-                    if (!sessionManager.getPatientIdHome().equals("NA")) {
-                        if (!sessionManager.getPatientNameHome().equals("NA")) {
-                            //**********************change date format********************
-                            Date localTime = null;
-                            try {
-                                localTime = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(str_patient_dob);//convert from
-                            } catch (java.text.ParseException e) {
-                                e.printStackTrace();
+                    if (validateForm(str_patient_email, str_patient_dob, str_patient_mobile, rgp_gender, str_patient_marital_status,
+                            str_patient_address)) {
+                        //remove error mark when no fields are empty
+                        et_email.setError(null);
+                        et_edit_dob.setError(null);
+                        et_mobile.setError(null);
+                        et_address.setError(null);
+                        if (!sessionManager.getPatientIdHome().equals("NA")) {
+                            if (!sessionManager.getPatientNameHome().equals("NA")) {
+                                //**********************change date format********************
+                                Date localTime = null;
+                                try {
+                                    localTime = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(str_patient_dob);//convert from
+                                } catch (java.text.ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//convert in
+                                String dob_format = sdf.format(new Date(localTime.getTime()));
+
+                                updatePatientDetail(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId(),
+                                        sessionManager.getPatientIdHome(), sessionManager.getPatientNameHome(),
+                                        str_patient_email, dob_format, str_patient_mobile,
+                                        str_patient_gender, strMaritalStatus, str_patient_address);
+                            } else {
+                                Toast.makeText(EditPatientDetails.this, "Invalid Patient Name!", Toast.LENGTH_SHORT).show();
                             }
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//convert in
-                            String dob_format = sdf.format(new Date(localTime.getTime()));
-
-                            updatePatientDetail(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId(),
-                                    sessionManager.getPatientIdHome(), sessionManager.getPatientNameHome(),
-                                    str_patient_email, dob_format, str_patient_mobile,
-                                    str_patient_gender, strMaritalStatus, str_patient_address);
                         } else {
-                            Toast.makeText(EditPatientDetails.this, "Invalid Patient Name!", Toast.LENGTH_SHORT).show();
+                            //do nothing
+                            Toast.makeText(EditPatientDetails.this, "Invalid Patient Information!", Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        //do nothing
-                        Toast.makeText(EditPatientDetails.this, "Invalid Patient Information!", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please Check Internet Connection!", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -521,16 +552,30 @@ public class EditPatientDetails extends AppCompatActivity implements View.OnClic
                         Toast.makeText(EditPatientDetails.this, edit_info_request.message, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    progressDialog.dismiss();
-                    new AlertDialog.Builder(EditPatientDetails.this)
-                            .setMessage("Something went wrong! Please try again")
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+                    if (response.code() == 400) {
+                        if (!response.isSuccessful()) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response.errorBody().string());
+                                String userMessage = jsonObject.getString("status");
+                                String internalMessage = jsonObject.getString("message");
+                                progressDialog.dismiss();
+                                new android.app.AlertDialog.Builder(EditPatientDetails.this)
+                                        .setMessage(internalMessage)
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 }
             }
 

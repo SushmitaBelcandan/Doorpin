@@ -23,7 +23,7 @@ public class IllnessDocUpload_RetroModel {
     @SerializedName("message")
     public String message;
 
-    @SerializedName("document_id")
+    @SerializedName("document_ids")
     public String document_id_res;
 
     @SerializedName("result")

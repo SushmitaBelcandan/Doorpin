@@ -10,30 +10,34 @@
     app:cardUseCompatPadding="true"
     android:layout_marginBottom="1dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/ten_dp">
 
         <TextView
             android:id="@+id/tv_surgeryname"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="2"
             android:fontFamily="@font/roboto_regular"
             android:padding="8dp"
             android:text="Cataract Surgery"
             android:textColor="@color/heading_purple"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:layout_alignParentLeft="true"/>
 
         <ImageButton
             android:id="@+id/imgBtnDropdown"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_weight="8"
             android:background="@color/purewhite"
             android:src="@drawable/right_blue_mipmap"
-            android:padding="5dp"/>
-    </LinearLayout>
+            android:padding="3dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
 </androidx.cardview.widget.CardView>

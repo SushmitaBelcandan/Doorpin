@@ -17,7 +17,7 @@
             android:background="@android:color/white"
             android:theme="@style/ToolbarColoredBackArrow"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:title="@string/patient_details_toolbar"
+            app:title="@string/edit_Profile_toolbar"
             app:titleTextAppearance="@style/toolbar_title"
             app:titleTextColor="@color/heading_purple" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -59,7 +59,7 @@
                         style="@style/new_patient_value"
                         android:hint=""
                         android:imeOptions="actionNext"
-                        android:inputType="textEmailAddress"
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                         android:singleLine="true" />
                 </LinearLayout>
 
@@ -102,7 +102,7 @@
                         android:layout_height="60dp"
                         android:layout_marginTop="@dimen/five_dp"
                         android:background="@drawable/edit_text_bg"
-                        android:digits="qwertyuiopasdfghjklzxcvbnm 1234567890 QWERTYUIOPASDFGHJKLZXCVBNM /-,()"
+                        android:digits="qwertyuiopasdfghjklzxcvbnm 1234567890 QWERTYUIOPASDFGHJKLZXCVBNM /-.()"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="top|left"
                         android:hint=""
@@ -130,11 +130,12 @@
                         style="@style/new_patient_value"
                         android:hint=""
                         android:imeOptions="actionNext"
-                        android:inputType="textEmailAddress"
+                        android:digits="qwertyuiopasdfghjklzxcvbnm 1234567890 QWERTYUIOPASDFGHJKLZXCVBNM /-.,()"
                         android:singleLine="true" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/llExperience"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -145,24 +146,32 @@
                         style="@style/new_patient_title"
                         android:text="@string/experience" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/five_dp"
-                        android:layout_weight="4"
-                        android:gravity="center|left">
+                    <!-- <LinearLayout
+                         android:layout_width="match_parent"
+                         android:layout_height="match_parent"
+                         android:layout_marginTop="@dimen/five_dp"
+                         android:layout_weight="4"
+                         android:gravity="center|left">
 
-                        <Spinner
-                            android:id="@+id/spnr_edit_exp"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_margin="1dp"
-                            android:layout_marginTop="@dimen/three_dp"
-                            android:background="@drawable/marital_spinner_bg"
-                            android:dropDownVerticalOffset="45dp"
-                            android:popupBackground="@drawable/dropdown_popup"
-                            android:spinnerMode="dropdown" />
-                    </LinearLayout>
+                         <Spinner
+                             android:id="@+id/spnr_edit_exp"
+                             android:layout_width="match_parent"
+                             android:layout_height="40dp"
+                             android:layout_margin="1dp"
+                             android:layout_marginTop="@dimen/three_dp"
+                             android:background="@drawable/marital_spinner_bg"
+                             android:dropDownVerticalOffset="45dp"
+                             android:popupBackground="@drawable/dropdown_popup"
+                             android:spinnerMode="dropdown" />
+                     </LinearLayout>-->
+                    <EditText
+                        android:id="@+id/et_edit_experience"
+                        style="@style/new_patient_value"
+                        android:hint=""
+                        android:imeOptions="actionNext"
+                        android:digits="1234567890"
+                        android:inputType="number"
+                        android:singleLine="true" />
                 </LinearLayout>
 
                 <LinearLayout

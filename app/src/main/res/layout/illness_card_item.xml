@@ -243,7 +243,7 @@
                             android:id="@+id/img_illness_presc"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:scaleType="fitXY"
+                            android:scaleType="centerCrop"
                             android:src="@drawable/download_sample" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -283,7 +283,7 @@
                             android:id="@+id/img_illness_reports"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:scaleType="fitXY"
+                            android:scaleType="centerCrop"
                             android:src="@drawable/document_grey" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -323,7 +323,7 @@
                             android:id="@+id/img_illness_other_doc"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:scaleType="fitXY"
+                            android:scaleType="centerCrop"
                             android:src="@drawable/document_grey" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>

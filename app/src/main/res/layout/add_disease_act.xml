@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_ContainerAddDisease"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/purewhite">
@@ -55,11 +56,12 @@
                     <EditText
                         android:id="@+id/et_name_addp_ill"
                         style="@style/new_patient_value"
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                         android:hint="Enter patient name"
                         android:imeOptions="actionNext"
-                        android:inputType="textEmailAddress"
                         android:singleLine="true" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -74,9 +76,9 @@
                     <EditText
                         android:id="@+id/et_disease_type_add_ill"
                         style="@style/new_patient_value"
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                         android:hint="example: cold"
                         android:imeOptions="actionNext"
-                        android:inputType="textEmailAddress"
                         android:singleLine="true" />
                 </LinearLayout>
 
@@ -91,16 +93,36 @@
                         style="@style/new_patient_title"
                         android:text="@string/fw_up" />
 
-                    <EditText
-                        android:id="@+id/et_follow_update"
-                        style="@style/new_patient_value"
-                        android:digits="0123456789/"
-                        android:drawableRight="@drawable/ic_action_name"
-                        android:hint="Enter follow up date in dd/mm/yyyy"
-                        android:imeOptions="actionDone"
-                        android:inputType="date"
-                        android:singleLine="true" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/five_dp"
+                        android:background="@drawable/edit_text_bg"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_follow_update"
+                            style="@style/follow_up_date_et_style"
+                            android:digits="0123456789/"
+                            android:hint="Enter follow up date in dd/mm/yyyy"
+                            android:imeOptions="actionDone"
+                            android:inputType="date"
+                            android:singleLine="true" />
+
+                        <ImageView
+                            android:id="@+id/ivCalender"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="8"
+                            android:gravity="right"
+                            android:padding="3dp"
+                            android:src="@drawable/ic_action_name"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/ll_doc_patient"
                     android:layout_width="wrap_content"
@@ -158,14 +180,31 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/ll_recyclerview"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="@dimen/five_dp"
-                    app:cardUseCompatPadding="true">
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_docs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purewhite" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_report"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purewhite" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_img"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purewhite" />
+                </LinearLayout>
+
 
                     <Button
                         android:id="@+id/btn_add"
@@ -175,11 +214,10 @@
                         android:fontFamily="@font/roboto_medium"
                         android:text="@string/add"
                         android:textAllCaps="false"
+                        android:layout_marginTop="@dimen/tweenty_dp"
                         android:textColor="@color/purewhite"
                         android:textSize="@dimen/eighteen_dp" />
-                </androidx.cardview.widget.CardView>
             </LinearLayout>
-
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

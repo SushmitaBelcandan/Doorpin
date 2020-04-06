@@ -50,23 +50,14 @@ public class Illness_List_Retro_Model {
         @SerializedName("follow_up_date")
         public String follow_up_date;
 
-        @SerializedName("prescription_id")
-        public String prescription_id;
+        @SerializedName("presc_data")
+        public Object presc_data;
 
-        @SerializedName("prescription_link")
-        public String prescription_link;
+        @SerializedName("report_data")
+        public Object report_data;
 
-        @SerializedName("report_id")
-        public String report_id;
-
-        @SerializedName("report_link")
-        public String report_link;
-
-        @SerializedName("document_id")
-        public String document_id;
-
-        @SerializedName("document_link")
-        public String document_link;
+        @SerializedName("otherdoc_data")
+        public Object otherdoc_data;
 
     }
 

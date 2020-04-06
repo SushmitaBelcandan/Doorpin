@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <cache-path
+        name="my_cache"
+        path="." />
+    <cache-path
+        name="cache"
+        path="." />
+    <external-cache-path
+        name="external_cache"
+        path="." />
+    <files-path
+        name="files"
+        path="." />
+    <external-path
+        name="external_files"
+        path="/" /><!--/storage/emulated/0/temp.jpg here external path defined upto "/storage/emulated/0" for linking temp define / for as joint-->
+</paths>

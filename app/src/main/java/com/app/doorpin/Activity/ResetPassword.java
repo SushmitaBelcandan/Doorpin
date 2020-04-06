@@ -24,6 +24,10 @@ import com.app.doorpin.retrofit.ApiInterface;
 import com.app.doorpin.retrofit.FP_Verify;
 import com.app.doorpin.retrofit.RP_Model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -121,7 +125,7 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
                         Toast.makeText(this, "Please Check Internet Connection!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                   // Toast.makeText(this, "Please Enter Required Information", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(this, "Please Enter Required Information", Toast.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -163,7 +167,6 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
                     if (rp_model.status.equals("success")) {
                         List<RP_Model.RPModel> reset_pass_list = rp_model.response;
                         for (RP_Model.RPModel reset_pass_data : reset_pass_list) {
-                            sessionManager.saveLoginData(reset_pass_data.user_id, reset_pass_data.login_id);
                             sessionManager.saveDoctorNurseId(reset_pass_data.user_type);
                         }
                         Toast.makeText(ResetPassword.this, rp_model.message, Toast.LENGTH_SHORT).show();
@@ -175,16 +178,30 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
                         progressDialog.dismiss();
                     }
                 } else {
-                    progressDialog.dismiss();
-                    new AlertDialog.Builder(ResetPassword.this)
-                            .setMessage("Network Connection error! Please try again later")
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+                    if (response.code() == 400) {
+                        if (!response.isSuccessful()) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response.errorBody().string());
+                                String userMessage = jsonObject.getString("status");
+                                String internalMessage = jsonObject.getString("message");
+                                progressDialog.dismiss();
+                                new AlertDialog.Builder(ResetPassword.this)
+                                        .setMessage(internalMessage)
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 }
             }
 

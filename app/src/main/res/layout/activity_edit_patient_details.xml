@@ -141,18 +141,35 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/dateofbirth" />
 
-                                <EditText
-                                    android:id="@+id/et_edit_dob"
-                                    style="@style/editPatientDetailsEditText"
+                                <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="40dp"
+                                    android:layout_marginTop="@dimen/five_dp"
                                     android:background="@drawable/edit_text_bg"
-                                    android:digits="0123456789/"
-                                    android:drawableRight="@drawable/ic_action_name"
-                                    android:hint="Enter dob in dd/mm/yyyy"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="date"
-                                    android:singleLine="true" />
+                                    android:gravity="center|left"
+                                    android:orientation="horizontal">
+
+                                    <EditText
+                                        android:id="@+id/et_edit_dob"
+                                        style="@style/ediyPatientPersonalInfo_FollowUp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:digits="0123456789/"
+                                        android:hint="Enter dob in dd/mm/yyyy"
+                                        android:imeOptions="actionNext"
+                                        android:inputType="date"
+                                        android:singleLine="true" />
+
+                                    <ImageView
+                                        android:id="@+id/ivCalenderDob"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="8"
+                                        android:gravity="right"
+                                        android:padding="3dp"
+                                        android:src="@drawable/ic_action_name"
+                                        android:visibility="visible" />
+                                </LinearLayout>
                             </LinearLayout>
 
                             <LinearLayout

@@ -5,8 +5,8 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -15,6 +15,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -25,20 +27,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.app.doorpin.Activity.EditPatientDetails;
-import com.app.doorpin.Activity.HomePage_Doctor;
+import com.app.doorpin.Activity.AddDisease;
+import com.app.doorpin.Activity.Profile_Nurse;
+import com.app.doorpin.Adapters.Utils;
 import com.app.doorpin.R;
 import com.app.doorpin.reference.SessionManager;
 import com.app.doorpin.retrofit.ApiClient;
 import com.app.doorpin.retrofit.ApiInterface;
+import com.app.doorpin.retrofit.Delete_Disease_Retro_Model;
 import com.app.doorpin.retrofit.Edit_Disease_Retro_Model;
-import com.app.doorpin.retrofit.Logout_RetroModel;
+import com.app.doorpin.retrofit.IllnessDocUpload_RetroModel;
+import com.app.doorpin.upload_docs.Upload_Docs_Interface;
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.mindorks.placeholderview.PlaceHolderView;
 import com.mindorks.placeholderview.annotations.Click;
 import com.mindorks.placeholderview.annotations.Layout;
@@ -46,12 +51,22 @@ import com.mindorks.placeholderview.annotations.NonReusable;
 import com.mindorks.placeholderview.annotations.Resolve;
 import com.mindorks.placeholderview.annotations.View;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -134,23 +149,39 @@ public class Illness_List_Model {
     Boolean flag_doc_visible_reports = true;
     Boolean flag_doc_visible_other_doc = true;
 
-    String str1_illness_id, str1_illness_name, str1_followup_date, str1_prsec_id, str1_prsec_link, str1_report_id, str1_report_link, str1_other_docs_id, str1_other_docs_link;
-    String str1_patient_id;
+    String str1_illness_id, str1_illness_name, str1_followup_date;
+    Object list_prsec_link;
+    Object list_report_link;
+    Object list_other_docs_link;
 
-    public Illness_List_Model(Context context, String str_illness_id, String str_illness_name, String str_followup_date,
-                              String str_prsec_id, String str_prsec_link, String str_report_id, String str_report_link,
-                              String str_other_docs_id, String str_other_docs_link, String str_patient_id) {
+    ArrayList<String> arr_list_prsc_name = new ArrayList<>();
+    ArrayList<String> arr_list_prsc_id = new ArrayList<>();
+    ArrayList<String> arr_list_report_name = new ArrayList<>();
+    ArrayList<String> arr_list_report_id = new ArrayList<>();
+    ArrayList<String> arr_list_other_doc_name = new ArrayList<>();
+    ArrayList<String> arr_list_other_doc_id = new ArrayList<>();
+
+    String str1_patient_id;
+    Upload_Docs_Interface upload_docs_interface;
+    PlaceHolderView m_phv_list;
+
+    public Illness_List_Model(Context context, PlaceHolderView phv_list, String str_illness_id, String str_illness_name, String str_followup_date,
+                              Object obj_arr_prsec_link, Object obj_arr_report_link, Object obj_arr_other_docs_link, String str_patient_id) {
         this.mContext = context;
+        this.m_phv_list = phv_list;
         this.str1_illness_id = str_illness_id;
         this.str1_illness_name = str_illness_name;
         this.str1_followup_date = str_followup_date;
-        this.str1_prsec_id = str_prsec_id;
-        this.str1_prsec_link = str_prsec_link;
-        this.str1_report_id = str_report_id;
-        this.str1_report_link = str_report_link;
-        this.str1_other_docs_id = str_other_docs_id;
-        this.str1_other_docs_link = str_other_docs_link;
+        this.list_prsec_link = obj_arr_prsec_link;
+        this.list_report_link = obj_arr_report_link;
+        this.list_other_docs_link = obj_arr_other_docs_link;
         this.str1_patient_id = str_patient_id;
+        try {
+            upload_docs_interface = (Upload_Docs_Interface) context;
+        } catch (ClassCastException ex) {
+            //.. should log the error or throw and exception
+            Log.e("MyAdapter", "Must implement the CallbackInterface in the Activity", ex);
+        }
     }
 
     @Resolve
@@ -160,11 +191,79 @@ public class Illness_List_Model {
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         progressDialog = new ProgressDialog(mContext);
         progressDialog.setMessage("Please wait.....");
+        arr_list_prsc_id.clear();
+        arr_list_prsc_name.clear();
+        arr_list_report_id.clear();
+        arr_list_report_name.clear();
+        arr_list_other_doc_id.clear();
+        arr_list_other_doc_name.clear();
+//-------------------------------------------prescription data--------------------------
+        Gson gson_prsec = new Gson();
+        String json_prsec = gson_prsec.toJson(list_prsec_link);
+        JSONArray jarr_Prsec = null;
+        try {
+            jarr_Prsec = new JSONArray(json_prsec);
+            for (int count = 0; count < jarr_Prsec.length(); count++) {
 
+                JSONObject obj = jarr_Prsec.getJSONObject(count);
+                String prscName = obj.getString("prescription_link");
+                String prscId = obj.getString("prescription_id");
+                if (!prscName.equals(null) && !prscName.equals("NA") && !prscName.isEmpty()) {
+                    arr_list_prsc_name.add(prscName);
+                    arr_list_prsc_id.add(prscId);
+                }
+                //so on
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//---------------------------------------------report data-------------------------------
+        Gson gson_report = new Gson();
+        String json_report = gson_report.toJson(list_report_link);
+        JSONArray jarr_report = null;
+        try {
+            jarr_report = new JSONArray(json_report);
+            for (int count = 0; count < jarr_report.length(); count++) {
+
+                JSONObject obj = jarr_report.getJSONObject(count);
+                String reportName = obj.getString("reportdoc_link");
+                String reportId = obj.getString("reportdoc_id");
+                if (!reportName.equals(null) && !reportName.equals("NA") && !reportName.isEmpty()) {
+                    arr_list_report_name.add(reportName);
+                    arr_list_report_id.add(reportId);
+                }
+                //so on
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//----------------------------------------------other documents---------------------------
+        Gson gson_other_docs = new Gson();
+        String json_other_docs = gson_other_docs.toJson(list_other_docs_link);
+        JSONArray jarr_other_docs = null;
+        try {
+            jarr_other_docs = new JSONArray(json_other_docs);
+            for (int count = 0; count < jarr_other_docs.length(); count++) {
+
+                JSONObject obj = jarr_other_docs.getJSONObject(count);
+                String odocsName = obj.getString("otherdoc_name");
+                String odocsId = obj.getString("otherdoc_id");
+                if (!odocsName.equals(null) && !odocsName.equals("NA") && !odocsName.isEmpty()) {
+                    arr_list_other_doc_name.add(odocsName);
+                    arr_list_other_doc_id.add(odocsId);
+                }
+                //so on
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//----------------------------------------------------------------------------------------------
         //disease name
         if (!str1_illness_name.equals("null") && !str1_illness_name.equals(null)
                 && !str1_illness_name.equals("NA") && !str1_illness_name.isEmpty()) {
-
             tv_disease_name.setText(str1_illness_name);
         } else {
             tv_disease_name.setText("");
@@ -185,43 +284,22 @@ public class Illness_List_Model {
             tv_followup_date_val.setText("");
         }
         //prsec Link
-        if (!str1_prsec_id.equals("null") && !str1_prsec_id.equals(null)
-                && !str1_prsec_id.equals("NA") && !str1_prsec_id.isEmpty()) {
-            if (!str1_prsec_link.equals("null") && !str1_prsec_link.equals(null)
-                    && !str1_prsec_link.equals("NA") && !str1_prsec_link.isEmpty()) {
-
-                Glide.with(mContext).load(str1_prsec_link).into(img_illness_presc);
-            } else {
-                Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_presc);
-            }
+        if (arr_list_prsc_name.size() > 0) {
+            Glide.with(mContext).load(arr_list_prsc_name.get(0)).into(img_illness_presc);
         } else {
             Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_presc);
         }
         //report link
-        if (!str1_report_id.equals("null") && !str1_report_id.equals(null)
-                && !str1_report_id.equals("NA") && !str1_report_id.isEmpty()) {
-            if (!str1_report_link.equals("null") && !str1_report_link.equals(null)
-                    && !str1_report_link.equals("NA") && !str1_report_link.isEmpty()) {
-
-                Glide.with(mContext).load(str1_report_link).into(img_illness_reports);
-            } else {
-                Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_presc);
-            }
+        if (arr_list_report_name.size() > 0) {
+            Glide.with(mContext).load(arr_list_report_name.get(0)).into(img_illness_reports);
         } else {
-            Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_presc);
+            Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_reports);
         }
         //other docs link
-        if (!str1_other_docs_id.equals("null") && !str1_other_docs_id.equals(null)
-                && !str1_other_docs_id.equals("NA") && !str1_other_docs_id.isEmpty()) {
-            if (!str1_other_docs_link.equals("null") && !str1_other_docs_link.equals(null)
-                    && !str1_other_docs_link.equals("NA") && !str1_other_docs_link.isEmpty()) {
-
-                Glide.with(mContext).load(str1_other_docs_link).into(img_illness_other_doc);
-            } else {
-                Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_presc);
-            }
+        if (arr_list_other_doc_name.size() > 0) {
+            Glide.with(mContext).load(arr_list_other_doc_name.get(0)).into(img_illness_other_doc);
         } else {
-            Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_presc);
+            Glide.with(mContext).load(R.drawable.download_sample).into(img_illness_other_doc);
         }
     }
 
@@ -284,7 +362,7 @@ public class Illness_List_Model {
                 // TODO Auto-generated method stub
                 DatePickerDialog dpd = new DatePickerDialog(mContext, R.style.MyThemeOverlay, date, followupCalendar
                         .get(Calendar.YEAR), followupCalendar.get(Calendar.MONTH), followupCalendar.get(Calendar.DAY_OF_MONTH));
-                //    dpd.getDatePicker().setMaxDate(System.currentTimeMillis()); //make future date disable
+                dpd.getDatePicker().setMinDate(System.currentTimeMillis()); //make past date disable
                 dpd.show();
                 dpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
@@ -351,98 +429,193 @@ public class Illness_List_Model {
                     }
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//convert in
                     String dob_format = sdf.format(new Date(localTime.getTime()));
-
-                    Edit_Disease_Retro_Model edit_disease_model = new Edit_Disease_Retro_Model(session.getDoctorNurseId(), session.getLoggedUsrId(),
-                            str1_patient_id, str1_illness_id, str_update_illness, dob_format);
-                    Call<Edit_Disease_Retro_Model> edit_disease_call = apiInterface.updateDisease(edit_disease_model);
-                    edit_disease_call.enqueue(new Callback<Edit_Disease_Retro_Model>() {
-                        @Override
-                        public void onResponse(Call<Edit_Disease_Retro_Model> call, Response<Edit_Disease_Retro_Model> response) {
-                            Edit_Disease_Retro_Model edit_illness_resources = response.body();
-                            if (response.isSuccessful()) {
-                                if (edit_illness_resources.status.equals("success")) {
-                                    List<Edit_Disease_Retro_Model.Edit_Disease_Datum> edit_illness_list = edit_illness_resources.response;
-                                    if (edit_illness_list.size() <= 0) {
-                                        //empty
-                                        progressDialog.dismiss();
-                                        rl_illness.setVisibility(android.view.View.VISIBLE);
-                                        rl_editDisease.setVisibility(android.view.View.GONE);//edit layout visible
-                                    } else {
-                                        //hide edit layout and display changes
-                                        for (Edit_Disease_Retro_Model.Edit_Disease_Datum edit_illness_data : edit_illness_list) {
-
-                                            //update disease name
-                                            if (!edit_illness_data.disease_names_r.equals("null") && !edit_illness_data.disease_names_r.equals("NA")
-                                                    && !edit_illness_data.disease_names_r.equals(null) && !edit_illness_data.disease_names_r.isEmpty()) {
-                                                tv_disease_name.setText(edit_illness_data.disease_names_r);
-                                            } else {
-                                                tv_disease_name.setText("");
-                                            }
-                                            //update follow up date
-                                            if (!edit_illness_data.follow_up_dates_r.equals("null") && !edit_illness_data.follow_up_dates_r.equals("NA")
-                                                    && !edit_illness_data.follow_up_dates_r.equals(null) && !edit_illness_data.follow_up_dates_r.isEmpty()) {
-                                                Date localTime = null;
-                                                try {
-                                                    localTime = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(edit_illness_data.follow_up_dates_r);//convert from
-                                                } catch (java.text.ParseException e) {
-                                                    e.printStackTrace();
-                                                }
-                                                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");//convert in
-                                                String dob_format = sdf.format(new Date(localTime.getTime()));
-                                                tv_followup_date_val.setText(dob_format);
-                                            } else {
-                                                tv_followup_date_val.setText("");
-                                            }
-                                        }
-                                        rl_illness.setVisibility(android.view.View.VISIBLE);
-                                        rl_editDisease.setVisibility(android.view.View.GONE);//edit layout visible
-                                        progressDialog.dismiss();
-                                    }
-                                } else {
-                                    //failure status
-                                    progressDialog.dismiss();
-                                    new AlertDialog.Builder(mContext)
-                                            .setMessage("Please Try Again")
-                                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                    rl_illness.setVisibility(android.view.View.VISIBLE);
-                                                    rl_editDisease.setVisibility(android.view.View.GONE);//edit layout visible
-                                                }
-                                            })
-                                            .setIcon(android.R.drawable.ic_dialog_alert)
-                                            .show();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Edit_Disease_Retro_Model> call, Throwable t) {
-                            call.cancel();
-                            progressDialog.dismiss();
-                            new AlertDialog.Builder(mContext)
-                                    .setMessage("Please Try Again")
-                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
+                    if (Utils.CheckInternetConnection(mContext)) {
+                        Edit_Disease_Retro_Model edit_disease_model = new Edit_Disease_Retro_Model(session.getDoctorNurseId(), session.getLoggedUsrId(),
+                                str1_patient_id, str1_illness_id, str_update_illness, dob_format);
+                        Call<Edit_Disease_Retro_Model> edit_disease_call = apiInterface.updateDisease(edit_disease_model);
+                        edit_disease_call.enqueue(new Callback<Edit_Disease_Retro_Model>() {
+                            @Override
+                            public void onResponse(Call<Edit_Disease_Retro_Model> call, Response<Edit_Disease_Retro_Model> response) {
+                                Edit_Disease_Retro_Model edit_illness_resources = response.body();
+                                if (response.isSuccessful()) {
+                                    if (edit_illness_resources.status.equals("success")) {
+                                        List<Edit_Disease_Retro_Model.Edit_Disease_Datum> edit_illness_list = edit_illness_resources.response;
+                                        if (edit_illness_list.size() <= 0) {
+                                            //empty
+                                            progressDialog.dismiss();
                                             rl_illness.setVisibility(android.view.View.VISIBLE);
                                             rl_editDisease.setVisibility(android.view.View.GONE);//edit layout visible
+                                        } else {
+                                            //hide edit layout and display changes
+                                            for (Edit_Disease_Retro_Model.Edit_Disease_Datum edit_illness_data : edit_illness_list) {
+
+                                                //update disease name
+                                                if (!edit_illness_data.disease_names_r.equals("null") && !edit_illness_data.disease_names_r.equals("NA")
+                                                        && !edit_illness_data.disease_names_r.equals(null) && !edit_illness_data.disease_names_r.isEmpty()) {
+                                                    tv_disease_name.setText(edit_illness_data.disease_names_r);
+                                                } else {
+                                                    tv_disease_name.setText("");
+                                                }
+                                                //update follow up date
+                                                if (!edit_illness_data.follow_up_dates_r.equals("null") && !edit_illness_data.follow_up_dates_r.equals("NA")
+                                                        && !edit_illness_data.follow_up_dates_r.equals(null) && !edit_illness_data.follow_up_dates_r.isEmpty()) {
+                                                    Date localTime = null;
+                                                    try {
+                                                        localTime = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(edit_illness_data.follow_up_dates_r);//convert from
+                                                    } catch (java.text.ParseException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");//convert in
+                                                    String dob_format = sdf.format(new Date(localTime.getTime()));
+                                                    tv_followup_date_val.setText(dob_format);
+                                                } else {
+                                                    tv_followup_date_val.setText("");
+                                                }
+                                            }
+                                            rl_illness.setVisibility(android.view.View.VISIBLE);
+                                            rl_editDisease.setVisibility(android.view.View.GONE);//edit layout visible
+                                            progressDialog.dismiss();
                                         }
-                                    })
-                                    .setIcon(android.R.drawable.ic_dialog_alert)
-                                    .show();
-                        }
-                    });
+                                    } else {
+                                        //failure status
+                                        progressDialog.dismiss();
+                                        new AlertDialog.Builder(mContext)
+                                                .setMessage("Please Try Again")
+                                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                        rl_illness.setVisibility(android.view.View.VISIBLE);
+                                                        rl_editDisease.setVisibility(android.view.View.GONE);//edit layout visible
+                                                    }
+                                                })
+                                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                                .show();
+                                    }
+                                } else {
+                                    if (response.code() == 400) {
+                                        if (!response.isSuccessful()) {
+                                            JSONObject jsonObject = null;
+                                            try {
+                                                jsonObject = new JSONObject(response.errorBody().string());
+                                                String userMessage = jsonObject.getString("status");
+                                                String internalMessage = jsonObject.getString("message");
+                                                rl_illness.setVisibility(android.view.View.VISIBLE);
+                                                rl_editDisease.setVisibility(android.view.View.GONE);
+                                                progressDialog.dismiss();
+                                                new AlertDialog.Builder(mContext)
+                                                        .setMessage(internalMessage)
+                                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                dialog.dismiss();
+                                                            }
+                                                        })
+                                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                                        .show();
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Edit_Disease_Retro_Model> call, Throwable t) {
+                                call.cancel();
+                                progressDialog.dismiss();
+                                new AlertDialog.Builder(mContext)
+                                        .setMessage("Please Try Again")
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                rl_illness.setVisibility(android.view.View.VISIBLE);
+                                                rl_editDisease.setVisibility(android.view.View.GONE);//edit layout visible
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            }
+                        });
+
+                    } else {
+                        Toast.makeText(mContext, "Please Check Internet Connection!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
 
     }
-/*
+
     @Click(R.id.imgbtn_delete)
     public void deleteRow() {
-        phv_doc_list.removeView(phv_doc_list.getChildLayoutPosition(cv_illness_list));
-    }*/
+        if (Utils.CheckInternetConnection(mContext)) {
+            if (!session.getDoctorNurseId().equals("null") || !session.getLoggedUsrId().equals("null")) {
+                Delete_Disease_Retro_Model illness_delete_model = new Delete_Disease_Retro_Model(session.getDoctorNurseId(),
+                        session.getLoggedUsrId(), str1_patient_id, str1_illness_id);
+                Call<Delete_Disease_Retro_Model> illness_deletel_call = apiInterface.deleteDisease(illness_delete_model);
+                illness_deletel_call.enqueue(new Callback<Delete_Disease_Retro_Model>() {
+                    @Override
+                    public void onResponse(Call<Delete_Disease_Retro_Model> call, Response<Delete_Disease_Retro_Model> response) {
+                        Delete_Disease_Retro_Model delete_illness_request = response.body();
+                        if (response.isSuccessful()) {
+                            if (delete_illness_request.status.equals("success")) {
+                                Toast.makeText(mContext, delete_illness_request.message, Toast.LENGTH_SHORT).show();
+                                m_phv_list.removeView(m_phv_list.getChildAdapterPosition(cv_illness_list));
+
+                            } else {
+                                Toast.makeText(mContext, delete_illness_request.message, Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            if (response.code() == 400) {
+                                if (!response.isSuccessful()) {
+                                    JSONObject jsonObject = null;
+                                    try {
+                                        jsonObject = new JSONObject(response.errorBody().string());
+                                        String userMessage = jsonObject.getString("status");
+                                        String internalMessage = jsonObject.getString("message");
+                                        new android.app.AlertDialog.Builder(mContext)
+                                                .setMessage(internalMessage)
+                                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                })
+                                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                                .show();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Delete_Disease_Retro_Model> call, Throwable t) {
+                        call.cancel();
+                    }
+                });
+            } else {
+                Toast.makeText(mContext, "Unable to delete", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(mContext, "Please Check Internet Connection!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private static final int GALLERY_PICTURE = 1;
+    private static final int CAMERA_REQUEST = 13;
+    private static final int DOC_REQUEST = 105;
+    private static final String DOC_TYPE_PRSEC = "1";
+    private static final String DOC_TYPE_REPORT = "2";
+    private static final String DOC_TYPE_OTHER = "3";
+    Bitmap bitmap;
+    String selectedImagePath;
+    public String mediaPath;
 
     @Click(R.id.imgbtn_upload)
     public void uploadDocs() {
@@ -455,23 +628,95 @@ public class Illness_List_Model {
         TextView tv_upload_report = (TextView) promptView.findViewById(R.id.tv_upload_report);
         TextView tv_upload_other_doc = (TextView) promptView.findViewById(R.id.tv_upload_other_doc);
 
+        final AlertDialog alertDialog_main = alertDialogBuilder.create();
+        alertDialog_main.show();
+        alertDialog_main.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         //-----------------------------------upload document action event------------------------
-       /* tv_upload_presec.setOnClickListener(new android.view.View.OnClickListener() {
+        tv_upload_presec.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
+                LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+                android.view.View promptView = layoutInflater.inflate(R.layout.choose_img_popup, null);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext, R.style.AlertDialogStyle);
+                alertDialogBuilder.setView(promptView);
 
+                Button btn_gallery = promptView.findViewById(R.id.btn_gallery);
+                Button btn_camera = promptView.findViewById(R.id.btn_camera);
+
+                final AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)); //mae alert bg transparent for custom rounded corner
+                //------------------------------select gallery----------------------------------------------------------------
+                btn_gallery.setOnClickListener(new android.view.View.OnClickListener() {
+                    @Override
+                    public void onClick(android.view.View v) {
+                        if (upload_docs_interface != null) {
+                            if (str1_illness_id.equals(null) || str1_patient_id.equals(null)) {
+                                //do nothing
+                            } else {
+                                upload_docs_interface.onHandleSelection(mContext, GALLERY_PICTURE, img_illness_presc, DOC_TYPE_PRSEC, str1_illness_id, str1_patient_id);
+                                alertDialog.dismiss();
+                                alertDialog_main.dismiss();
+                            }
+                        }
+                    }
+                });
+                //----------------------------capture image from camera--------------------------------------------------
+                btn_camera.setOnClickListener(new android.view.View.OnClickListener() {
+                    @Override
+                    public void onClick(android.view.View v) {
+                        if (upload_docs_interface != null) {
+                            if (str1_illness_id.equals(null) || str1_patient_id.equals(null)) {
+                                //do nothing
+                            } else {
+                                upload_docs_interface.onHandleSelection(mContext, CAMERA_REQUEST, img_illness_presc, DOC_TYPE_PRSEC, str1_illness_id, str1_patient_id);
+                                alertDialog.dismiss();
+                                alertDialog_main.dismiss();
+                            }
+                        }
+                    }
+                });
             }
         });
-*/
-
-        final AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)); //mae alert bg transparent for custom rounded corner
+        //----------------------------------------upload report---------------------------------------------------------
+        tv_upload_report.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                if (upload_docs_interface != null) {
+                    if (str1_illness_id.equals(null) || str1_patient_id.equals(null)) {
+                        //do nothing
+                    } else {
+                        upload_docs_interface.onHandleSelection(mContext, DOC_REQUEST, img_illness_reports, DOC_TYPE_REPORT, str1_illness_id, str1_patient_id);
+                        alertDialog_main.dismiss();
+                    }
+                }
+            }
+        });
+        //----------------------------------------upload other documents---------------------------------------------------------
+        tv_upload_other_doc.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                if (upload_docs_interface != null) {
+                    if (str1_illness_id.equals(null) || str1_patient_id.equals(null)) {
+                        //do nothing
+                    } else {
+                        upload_docs_interface.onHandleSelection(mContext, DOC_REQUEST, img_illness_other_doc, DOC_TYPE_OTHER, str1_illness_id, str1_patient_id);
+                        alertDialog_main.dismiss();
+                    }
+                }
+            }
+        });
     }
 
     @Click(R.id.card_view_prsec)
     public void getPresecList() {
-
+        if (session.getDocsDataType().equals("1")) {
+            if (!session.getDocsDataId().equals("null")) {
+                arr_list_prsc_id.add(session.getDocsDataId());
+                arr_list_prsc_name.add(session.getDocsDataName());
+                session.saveDocsData("null", "null", "null");
+            }
+        }
         if (flag_doc_visible_prsec == true) {
             phv_doc_list.setVisibility(android.view.View.VISIBLE);
             session.saveDocType("Prescription");
@@ -480,10 +725,13 @@ public class Illness_List_Model {
                     .setItemViewCacheSize(10)
                     .setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
-            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
-            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
-            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
-            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            if (arr_list_prsc_id.size() > 0) {
+                for (int i = 0; i < arr_list_prsc_id.size(); i++) {
+                    phv_doc_list.addView(new Patient_Doc_List_Model(mContext, arr_list_prsc_id.get(i), arr_list_prsc_name.get(i), arr_list_prsc_name));
+                }
+            } else {
+                //do not display anything
+            }
             flag_doc_visible_prsec = false;
         } else {
             phv_doc_list.setVisibility(android.view.View.GONE);
@@ -493,6 +741,13 @@ public class Illness_List_Model {
 
     @Click(R.id.card_view_reports)
     public void getReportsList() {
+        if (session.getDocsDataType().equals("2")) {
+            if (!session.getDocsDataId().equals("null")) {
+                arr_list_report_id.add(session.getDocsDataId());
+                arr_list_report_name.add(session.getDocsDataName());
+                session.saveDocsData("null", "null", "null");
+            }
+        }
         if (flag_doc_visible_reports == true) {
             phv_doc_list.setVisibility(android.view.View.VISIBLE);
             session.saveDocType("Reports");
@@ -501,10 +756,13 @@ public class Illness_List_Model {
                     .setItemViewCacheSize(10)
                     .setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
-            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
-            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
-            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
-            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            if (arr_list_report_id.size() > 0) {
+                for (int i = 0; i < arr_list_report_id.size(); i++) {
+                    phv_doc_list.addView(new Patient_Doc_List_Model(mContext, arr_list_report_id.get(i), arr_list_report_name.get(i), arr_list_report_name));
+                }
+            } else {
+                //do not display anything
+            }
             flag_doc_visible_reports = false;
         } else {
             phv_doc_list.setVisibility(android.view.View.GONE);
@@ -514,6 +772,13 @@ public class Illness_List_Model {
 
     @Click(R.id.card_view_other_doc)
     public void getOtherDocsList() {
+        if (session.getDocsDataType().equals("3")) {
+            if (!session.getDocsDataId().equals("null")) {
+                arr_list_other_doc_id.add(session.getDocsDataId());
+                arr_list_other_doc_name.add(session.getDocsDataName());
+                session.saveDocsData("null", "null", "null");
+            }
+        }
         if (flag_doc_visible_other_doc == true) {
             phv_doc_list.setVisibility(android.view.View.VISIBLE);
             session.saveDocType("Other Documents");
@@ -522,14 +787,19 @@ public class Illness_List_Model {
                     .setItemViewCacheSize(10)
                     .setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
-            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
-            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
-            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
-            phv_doc_list.addView(new Patient_Doc_List_Model(mContext));
+            if (arr_list_other_doc_id.size() > 0) {
+                for (int i = 0; i < arr_list_other_doc_id.size(); i++) {
+                    phv_doc_list.addView(new Patient_Doc_List_Model(mContext, arr_list_other_doc_id.get(i),
+                            arr_list_other_doc_name.get(i), arr_list_other_doc_name));
+                }
+            } else {
+                //do not display anything
+            }
             flag_doc_visible_other_doc = false;
         } else {
             phv_doc_list.setVisibility(android.view.View.GONE);
             flag_doc_visible_other_doc = true;
         }
     }
+
 }

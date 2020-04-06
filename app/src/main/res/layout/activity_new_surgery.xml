@@ -55,7 +55,7 @@
                     android:layout_marginTop="@dimen/three_dp"
                     android:background="@drawable/surgery_dropdown"
                     android:dropDownVerticalOffset="60dp"
-                    android:popupBackground="@drawable/dropdown_popup"
+                    android:popupBackground="@drawable/surgery_popup"
                     android:spinnerMode="dropdown" />
             </androidx.cardview.widget.CardView>
 
@@ -98,6 +98,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890-/\+"
+                        android:ellipsize="end"
                         android:fontFamily="@font/roboto_regular"
                         android:hint="@string/search_by_name_or_patient_id"
                         android:padding="@dimen/five_dp"
@@ -122,10 +123,25 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_doc_patient"
+                android:id="@+id/llSearchList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ll_new_patient"
+                android:layout_margin="@dimen/ten_dp"
+                android:orientation="horizontal">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_searchlist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/purewhite" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_doc_patient"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llSearchList"
                 android:layout_margin="20dp"
                 android:orientation="horizontal">
 
@@ -137,6 +153,7 @@
                     android:orientation="vertical">
 
                     <ImageView
+                        android:id="@+id/iv_uploadDocs"
                         android:layout_width="30dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
@@ -162,6 +179,7 @@
                     android:padding="20dp">
 
                     <ImageView
+                        android:id="@+id/iv_uploadImg"
                         android:layout_width="30dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
@@ -179,30 +197,57 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/llList"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="@dimen/thirty_dp"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="@dimen/five_dp"
-                app:cardUseCompatPadding="true">
+                android:orientation="vertical"
+                android:layout_below="@+id/ll_doc_patient">
 
-                <Button
-                    android:id="@+id/btn_add"
+                <LinearLayout
+                    android:id="@+id/ll_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_docs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purewhite" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_img"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purewhite" />
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/ll_doc_patient"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
-                    android:background="@drawable/button_shape"
-                    android:fontFamily="@font/roboto_medium"
-                    android:text="@string/add"
-                    android:textAllCaps="false"
-                    android:textColor="@color/purewhite"
-                    android:textSize="@dimen/eighteen_sp" />
-            </androidx.cardview.widget.CardView>
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="@dimen/five_dp"
+                    app:cardUseCompatPadding="true">
+
+                    <Button
+                        android:id="@+id/btn_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_doc_patient"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_shape"
+                        android:fontFamily="@font/roboto_medium"
+                        android:text="@string/add"
+                        android:textAllCaps="false"
+                        android:textColor="@color/purewhite"
+                        android:textSize="@dimen/eighteen_sp" />
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
         </RelativeLayout>
     </ScrollView>
 </LinearLayout>

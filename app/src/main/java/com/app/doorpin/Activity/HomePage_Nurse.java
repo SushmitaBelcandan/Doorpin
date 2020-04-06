@@ -36,6 +36,10 @@ import com.app.doorpin.retrofit.SearchPatient_RetroModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +67,7 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
 
     private ArrayList<String> arrlist_patient_id;
     private ArrayList<String> arrlist_patient_name;
+    private ArrayList<String> arrlist_display_id;
 
     private String str_search_key;
 
@@ -94,12 +99,12 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
         rv_patient_nurse.setHasFixedSize(true);
         rv_patient_nurse.setLayoutManager(new GridLayoutManager(this, 2));//grid view of patient list
 
-      /*  fab_homepage.setOnClickListener(new View.OnClickListener() {
+        fab_homepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomePage_Nurse.this, NewPatient.class));
+                startActivity(new Intent(HomePage_Nurse.this, NewPatient1.class));
             }
-        });*/
+        });
 
         getPatientList(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId());
         etSearchNurse.addTextChangedListener(new TextWatcher() {
@@ -111,7 +116,9 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (etSearchNurse.getText().toString().length() == 0) {
-                    getPatientList(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId());//when search text is empty then show home page default data
+                    if (Utils.CheckInternetConnection(getApplicationContext())) {
+                        getPatientList(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId());//when search text is empty then show home page default data
+                    }
                 }
             }
 
@@ -159,7 +166,11 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
                 } else {
-                    logoutUser(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId(), sessionManager.getDeviceId());
+                    if (Utils.CheckInternetConnection(getApplicationContext())) {
+                        logoutUser(sessionManager.getDoctorNurseId(), sessionManager.getLoggedUsrId(), sessionManager.getDeviceId());
+                    } else {
+                        Toast.makeText(HomePage_Nurse.this, "Please Check Internet Connection!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -182,7 +193,7 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
                     if (logout_resources.status1.equals("success")) {
                         progressDialog.dismiss();
                         Toast.makeText(HomePage_Nurse.this, logout_resources.message1, Toast.LENGTH_SHORT).show();
-                        Intent intentLogin = new Intent(HomePage_Nurse.this, Login.class);
+                        Intent intentLogin = new Intent(HomePage_Nurse.this, MainActivity.class);
                         startActivity(intentLogin);
                         sessionManager.logoutUser();
                         finish();
@@ -200,16 +211,30 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
                     }
                 } else {
                     //response id getting failed
-                    progressDialog.dismiss();
-                    new AlertDialog.Builder(HomePage_Nurse.this)
-                            .setMessage("Please Try Again")
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+                    if (response.code() == 400) {
+                        if (!response.isSuccessful()) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response.errorBody().string());
+                                String userMessage = jsonObject.getString("status");
+                                String internalMessage = jsonObject.getString("message");
+                                progressDialog.dismiss();
+                                new AlertDialog.Builder(HomePage_Nurse.this)
+                                        .setMessage(internalMessage)
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 }
             }
 
@@ -258,16 +283,19 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
 
                             arrlist_patient_id = new ArrayList<>();
                             arrlist_patient_name = new ArrayList<>();
+                            arrlist_display_id = new ArrayList<>();
                             for (SearchPatient_RetroModel.Search_Datum datum : datumList) {
                                 if (datum.patient_id.equals(null) || datum.patient_id.isEmpty() || datum.patient_id.equals("NA")) {
                                     //skip row for null value
                                 } else {
                                     arrlist_patient_id.add(datum.patient_id);
                                     arrlist_patient_name.add(datum.patient_name);
+                                    arrlist_display_id.add(datum.display_id);
                                 }
 
                             }
-                            PatientAdapter adapter = new PatientAdapter(getApplicationContext(),arrlist_patient_id, arrlist_patient_name);
+                            PatientAdapter adapter = new PatientAdapter(getApplicationContext(), arrlist_patient_id, arrlist_patient_name,
+                                    arrlist_display_id);
                             rv_patient_nurse.setAdapter(adapter);
                             progressDialog.dismiss();
                             Toast.makeText(HomePage_Nurse.this, search_resources.message, Toast.LENGTH_SHORT).show();
@@ -280,10 +308,33 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
                         Toast.makeText(HomePage_Nurse.this, search_resources.message, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    llNoData.setVisibility(View.VISIBLE);
-                    rv_patient_nurse.setVisibility(View.GONE);
-                    llNetworkError.setVisibility(View.GONE);
-                    progressDialog.dismiss();
+                    if (response.code() == 400) {
+                        if (!response.isSuccessful()) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response.errorBody().string());
+                                String userMessage = jsonObject.getString("status");
+                                String internalMessage = jsonObject.getString("message");
+                                progressDialog.dismiss();
+                                llNoData.setVisibility(View.VISIBLE);
+                                rv_patient_nurse.setVisibility(View.GONE);
+                                llNetworkError.setVisibility(View.GONE);
+                                new AlertDialog.Builder(HomePage_Nurse.this)
+                                        .setMessage(internalMessage)
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 }
             }
 
@@ -333,16 +384,19 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
 
                             arrlist_patient_id = new ArrayList<>();
                             arrlist_patient_name = new ArrayList<>();
+                            arrlist_display_id = new ArrayList<>();
                             for (HomePage_RetroModel.HomePage_Datum datum : datumList) {
                                 if (datum.patient_id.equals(null) || datum.patient_id.isEmpty() || datum.patient_id.equals("NA")) {
                                     //skip row for null value
                                 } else {
                                     arrlist_patient_id.add(datum.patient_id);
                                     arrlist_patient_name.add(datum.patient_name);
+                                    arrlist_display_id.add(datum.display_id);
                                 }
 
                             }
-                            PatientAdapter adapter = new PatientAdapter(getApplicationContext(),arrlist_patient_id, arrlist_patient_name);
+                            PatientAdapter adapter = new PatientAdapter(getApplicationContext(), arrlist_patient_id, arrlist_patient_name,
+                                    arrlist_display_id);
                             rv_patient_nurse.setAdapter(adapter);
                             progressDialog.dismiss();
                             //  Toast.makeText(HomePage_Nurse.this, homepage_resources.message, Toast.LENGTH_SHORT).show();
@@ -355,10 +409,33 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
                         Toast.makeText(HomePage_Nurse.this, homepage_resources.message, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    llNetworkError.setVisibility(View.VISIBLE);
-                    llNoData.setVisibility(View.GONE);
-                    rv_patient_nurse.setVisibility(View.GONE);
-                    progressDialog.dismiss();
+                    if (response.code() == 400) {
+                        if (!response.isSuccessful()) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response.errorBody().string());
+                                String userMessage = jsonObject.getString("status");
+                                String internalMessage = jsonObject.getString("message");
+                                progressDialog.dismiss();
+                                llNoData.setVisibility(View.VISIBLE);
+                                rv_patient_nurse.setVisibility(View.GONE);
+                                llNetworkError.setVisibility(View.GONE);
+                                new AlertDialog.Builder(HomePage_Nurse.this)
+                                        .setMessage(internalMessage)
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 }
             }
 
@@ -388,8 +465,8 @@ public class HomePage_Nurse extends AppCompatActivity implements BottomNavigatio
                 break;
 
             case R.id.navigation_nurse_profile:
-               /* startActivity(new Intent(HomePage_Nurse.this, Profile_Nurse.class));
-                finish();*/
+                startActivity(new Intent(HomePage_Nurse.this, Profile_Nurse.class));
+                finish();
                 break;
         }
 

@@ -6,15 +6,11 @@ import java.util.List;
 
 public class SurgList_DP_RetroModel {
 
-    @SerializedName("user_types")
-    public String user_types;
+    @SerializedName("hospital_ids")
+    public String hospital_ids;
 
-    @SerializedName("user_ids")
-    public String user_ids;
-
-    public SurgList_DP_RetroModel(String usrType, String usrId) {
-        this.user_types = usrType;
-        this.user_ids = usrId;
+    public SurgList_DP_RetroModel(String hospitalId) {
+        this.hospital_ids = hospitalId;
     }
 
     @SerializedName("status")

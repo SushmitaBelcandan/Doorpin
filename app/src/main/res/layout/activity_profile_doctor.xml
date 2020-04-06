@@ -29,6 +29,7 @@
                 android:textSize="@dimen/eighteen_sp" />
 
             <ImageView
+                android:id="@+id/iv_logout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -56,21 +57,40 @@
                 android:background="@color/purewhite"
                 android:padding="8dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/img_profile"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                <!-- <de.hdodenhof.circleimageview.CircleImageView
+                     android:id="@+id/img_profile"
+                     android:layout_width="70dp"
+                     android:layout_height="70dp"
+                     android:layout_margin="15dp"
+                     android:src="@drawable/profile_grey" />
+ -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_view_prsec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_margin="15dp"
-                    android:src="@drawable/profile_grey" />
+                    android:elevation="@dimen/five_dp"
+                    app:cardBackgroundColor="@color/purewhite"
+                    app:cardCornerRadius="40dp">
+
+                    <ImageView
+                        android:id="@+id/img_profile"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:background="@drawable/circle_bg"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/person" />
+                </androidx.cardview.widget.CardView>
 
                 <TextView
                     android:id="@+id/doctorname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_toRightOf="@+id/img_profile"
-                    android:fontFamily="@font/roboto_regular"
-                    android:text="@string/doctor_name"
+                    android:layout_toRightOf="@+id/card_view_prsec"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text=""
                     android:textColor="@color/heading_purple"
                     android:textSize="@dimen/eighteen_sp" />
 
@@ -88,9 +108,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/doctorname"
                     android:layout_margin="3dp"
-                    android:layout_toRightOf="@+id/img_profile"
+                    android:layout_toRightOf="@+id/card_view_prsec"
                     android:fontFamily="@font/roboto_regular"
-                    android:text="@string/doctor_specialiazation"
+                    android:text="nurse"
                     android:textColor="@color/dark_grey"
                     android:textSize="@dimen/fourteen_sp" />
 
@@ -100,9 +120,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/specialiazation"
                     android:layout_margin="3dp"
-                    android:layout_toRightOf="@+id/img_profile"
+                    android:layout_toRightOf="@+id/card_view_prsec"
                     android:fontFamily="@font/roboto_regular"
-                    android:text="@string/years_of_experience"
+                    android:text=""
                     android:textColor="@color/dark_grey"
                     android:textSize="@dimen/fourteen_sp" />
 
@@ -117,17 +137,20 @@
                 android:padding="5dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="14dp"
                     android:src="@drawable/call_grey" />
 
                 <TextView
+                    android:id="@+id/tv_mobile"
                     style="@style/profile_texts"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="@string/doc_name" />
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="12dp"
+                    android:text="" />
             </LinearLayout>
 
             <LinearLayout
@@ -140,16 +163,19 @@
 
                 <ImageView
                     android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="5dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="10dp"
                     android:src="@drawable/graduation_hat_grey" />
 
                 <TextView
+                    android:id="@+id/tv_qualifications"
                     style="@style/profile_texts"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="@string/grad_details" />
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/twelve_dp"
+                    android:layout_marginRight="12dp"
+                    android:text="" />
             </LinearLayout>
 
             <View
@@ -157,7 +183,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@id/ll_education"
-                android:background="@color/grey" />
+                android:background="@color/grey_2" />
 
             <LinearLayout
                 android:id="@+id/ll_location"
@@ -171,17 +197,19 @@
                 android:paddingBottom="@dimen/twelve_dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="5dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="12dp"
                     android:src="@drawable/locationpin_grey" />
 
                 <TextView
+                    android:id="@+id/tv_address"
                     style="@style/profile_texts"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="@string/address_details" />
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="13dp"
+                    android:text="" />
             </LinearLayout>
 
             <View
@@ -189,7 +217,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@id/ll_location"
-                android:background="@color/grey" />
+                android:background="@color/grey_2" />
 
 
             <RelativeLayout
@@ -206,15 +234,15 @@
 
                 <ImageView
                     android:id="@+id/img_documents"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginLeft="12dp"
                     android:src="@drawable/document_grey" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_marginLeft="@dimen/twelve_dp"
                     android:layout_toRightOf="@+id/img_documents"
                     android:fontFamily="@font/roboto_medium"
                     android:text="@string/documents"
@@ -222,19 +250,31 @@
                     android:textSize="@dimen/sixteen_sp" />
 
                 <ImageView
+                    android:id="@+id/iv_upload_doc"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/ten_dp"
                     android:src="@drawable/upload_violet" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_documents"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/img_documents"
-                    android:layout_margin="10dp"
-                    android:scrollbars="horizontal" />
+                    android:layout_below="@+id/iv_upload_doc"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginTop="@dimen/fifteen_dp"
+                    android:layout_marginRight="@dimen/ten_dp"
+                    android:layout_marginBottom="@dimen/ten_dp">
+
+                    <com.mindorks.placeholderview.PlaceHolderView
+                        android:id="@+id/phv_doc_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="@dimen/five_dp"
+                        android:background="@color/purewhite"
+                        android:orientation="horizontal"
+                        android:visibility="visible" />
+                </LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
@@ -267,7 +307,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
-                        android:text="No surgery Done Yet!"
+                        android:text="No surgery done yet!"
                         android:visibility="gone" />
 
                     <androidx.recyclerview.widget.RecyclerView

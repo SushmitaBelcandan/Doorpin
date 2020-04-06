@@ -53,11 +53,11 @@
             android:id="@+id/img_eye_view"
             android:layout_width="25dp"
             android:layout_height="25dp"
+            android:layout_alignParentBottom="true"
             android:layout_below="@+id/tv_patient_id"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/ten_dp"
-            android:src="@drawable/view_violet"
-            android:layout_centerVertical="true"/>
+            android:src="@drawable/view_violet" />
         </RelativeLayout>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

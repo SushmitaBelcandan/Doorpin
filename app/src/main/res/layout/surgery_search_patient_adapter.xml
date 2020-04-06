@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv_container"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:background="@color/purewhite"
+    app:cardElevation="@dimen/five_dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/five_dp">
+
+        <TextView
+            android:id="@+id/tv_patient_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:ellipsize="marquee"
+            android:fontFamily="@font/roboto_regular"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/heading_purple"
+            android:textSize="@dimen/eighteen_sp" />
+
+        <TextView
+            android:id="@+id/tv_patient_id"
+            android:layout_width="wrap_content"
+            android:layout_height="21dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="8dp"
+            android:layout_toRightOf="@+id/tv_patient_name"
+            android:ellipsize="marquee"
+            android:fontFamily="@font/roboto_regular"
+            android:singleLine="true"
+            android:text="Patient Id-"
+            android:textColor="@color/dark_grey"
+            android:textSize="@dimen/fourteen_sp" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

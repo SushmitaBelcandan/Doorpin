@@ -69,6 +69,17 @@
         <item name="android:textCursorDrawable">@drawable/text_cursor_color</item>
         <item name="android:layout_marginTop">@dimen/three_dp</item>
     </style>
+    <style name="ediyPatientPersonalInfo_FollowUp">
+        <item name="android:textColor">@color/black_shade_1</item>
+        <item name="android:textSize">@dimen/sixteen_sp</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:paddingBottom">@dimen/five_dp</item>
+        <item name="android:gravity">left|center</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:padding">@dimen/eight_dp</item>
+        <item name="android:background">@null</item>
+        <item name="android:textCursorDrawable">@drawable/text_cursor_color</item>
+    </style>
 
     <style name="edit_patient_info_title">
         <item name="android:textColor">@color/black_shade_1</item>
@@ -173,6 +184,18 @@
         <item name="android:textCursorDrawable">@drawable/text_cursor_color</item>
         <item name="android:background">@drawable/edit_text_bg</item>
         <item name="android:layout_marginTop">@dimen/five_dp</item>
+    </style>
+    <style name="follow_up_date_et_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textColor">@color/black_shade_1</item>
+        <item name="android:textSize">@dimen/sixteen_sp</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:gravity">left</item>
+        <item name="android:padding">@dimen/eight_dp</item>
+        <item name="android:textCursorDrawable">@drawable/text_cursor_color</item>
+        <item name="android:background">@null</item>
+        <item name="android:layout_weight">2</item>
     </style>
 <style name="profile_texts">
     <item name="android:textSize">@dimen/fourteen_sp</item>

@@ -35,7 +35,7 @@ public class SplashScreen extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else if (session.getDoctorNurseId().equals("2")) {
-                        Intent intent = new Intent(SplashScreen.this, HomePage_Doctor.class);
+                        Intent intent = new Intent(SplashScreen.this, HomePage_Nurse.class);
                         startActivity(intent);
                         finish();
                     } else {

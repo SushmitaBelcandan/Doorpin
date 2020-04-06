@@ -8,8 +8,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.Annotation;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,10 +26,17 @@ import com.app.doorpin.retrofit.ApiClient;
 import com.app.doorpin.retrofit.ApiInterface;
 import com.app.doorpin.retrofit.LoginRequest;
 
-import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Converter;
 import retrofit2.Response;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
@@ -41,7 +50,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     Button btn_login;
     ImageView ivHidePass, ivShowPass;
 
-    private String str_login_id, str_password, str_device_id;
+    private String str_login_id;
+    private String str_password;
+    private String str_device_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +94,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             }
         });
         //get device id
-        str_device_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
+        // str_device_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        str_device_id = UUID.randomUUID().toString();//android_id is not safe
     }
 
     @Override
@@ -180,7 +191,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 LoginRequest loginRequest = response.body();
                 if (response.isSuccessful()) {
                     if (loginRequest.status.equals("success")) {
-
                         List<LoginRequest.Login_Datum> login_datum = loginRequest.response;
                         if (login_datum.size() <= 0) {
                             //when response array is empty
@@ -188,7 +198,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             Toast.makeText(Login.this, loginRequest.message, Toast.LENGTH_SHORT).show();
                         } else {
                             for (LoginRequest.Login_Datum data : login_datum) {
-                                sessionManager.saveLoginData(data.user_id, data.login_id);
+                                if (!data.hospital_id.equals("null") && !data.hospital_id.equals(null) && !data.hospital_id.isEmpty()) {
+                                    sessionManager.saveLoginData(data.user_id, data.login_id, data.hospital_id);
+                                } else {
+                                    sessionManager.saveLoginData(data.user_id, data.login_id, "NA");
+                                }
                                 sessionManager.saveDoctorNurseId(data.user_type);
                                 if (str_device_id.equals(null) || str_device_id.isEmpty()) {
                                     sessionManager.saveDeviceId("NA");
@@ -215,16 +229,30 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         Toast.makeText(Login.this, loginRequest.message, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    progressDialog.dismiss();
-                    new AlertDialog.Builder(Login.this)
-                            .setMessage("Network Connection error! Please try again later")
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+                    if (response.code() == 400) {
+                        if (!response.isSuccessful()) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response.errorBody().string());
+                                String userMessage = jsonObject.getString("status");
+                                String internalMessage = jsonObject.getString("message");
+                                progressDialog.dismiss();
+                                new AlertDialog.Builder(Login.this)
+                                        .setMessage(internalMessage)
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 }
             }
 
@@ -233,7 +261,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 call.cancel();
                 progressDialog.dismiss();
                 new AlertDialog.Builder(Login.this)
-                        .setMessage("Network Connection error! Please try again later")
+                        .setMessage("Server error! Please try again later")
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();

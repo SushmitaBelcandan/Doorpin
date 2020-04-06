@@ -19,12 +19,18 @@ import androidx.fragment.app.Fragment;
 
 import com.app.doorpin.Activity.EditPatientDetails;
 import com.app.doorpin.Activity.Login;
+import com.app.doorpin.Activity.Profile_Nurse;
+import com.app.doorpin.Adapters.Utils;
 import com.app.doorpin.R;
 import com.app.doorpin.reference.SessionManager;
 import com.app.doorpin.retrofit.ApiClient;
 import com.app.doorpin.retrofit.ApiInterface;
 import com.app.doorpin.retrofit.Patient_PersInfo_RetroModel;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -63,13 +69,19 @@ public class PatientDetails_PersoInfo_Frag extends Fragment {
         tv_patientsAgeVal = view.findViewById(R.id.tv_patientsAgeVal);
         tv_addressVal = view.findViewById(R.id.tv_addressVal);
         ll_edit = view.findViewById(R.id.ll_edit);
-        if (!sessionManager.getPatientIdHome().equals("NA")) {
-            getPersonalInformation(sessionManager.getDoctorNurseId(),
-                    sessionManager.getLoggedUsrId(), sessionManager.getPatientIdHome());
+
+        if (Utils.CheckInternetConnection(getActivity())) {
+            if (!sessionManager.getPatientIdHome().equals("NA")) {
+                getPersonalInformation(sessionManager.getDoctorNurseId(),
+                        sessionManager.getLoggedUsrId(), sessionManager.getPatientIdHome());
+            } else {
+                //do nothing
+                Toast.makeText(getActivity(), "Something went wrong! Please try again", Toast.LENGTH_SHORT).show();
+            }
         } else {
-            //do nothing
-            Toast.makeText(getActivity(), "Something went wrong! Please try again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please Check Internet Connection!", Toast.LENGTH_SHORT).show();
         }
+
 
         init();
         return view;
@@ -167,16 +179,30 @@ public class PatientDetails_PersoInfo_Frag extends Fragment {
                         Toast.makeText(getContext(), patientPersonalInfoRequest.message, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    progressDialog.dismiss();
-                    new AlertDialog.Builder(getActivity())
-                            .setMessage("Network Connection error! Please try again later")
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+                    if (response.code() == 400) {
+                        if (!response.isSuccessful()) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response.errorBody().string());
+                                String userMessage = jsonObject.getString("status");
+                                String internalMessage = jsonObject.getString("message");
+                                progressDialog.dismiss();
+                                new android.app.AlertDialog.Builder(getActivity())
+                                        .setMessage(internalMessage)
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 }
             }
 

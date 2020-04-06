@@ -36,6 +36,9 @@ public class HomePage_RetroModel {
 
         @SerializedName("patient_name")
         public String patient_name;
+
+        @SerializedName("display_id")
+        public String display_id;
     }
 
 }

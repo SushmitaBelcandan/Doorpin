@@ -2,33 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_marginLeft="@dimen/ten_dp"
+    android:layout_marginTop="-4dp"
+    android:layout_marginRight="@dimen/ten_dp"
+    android:layout_marginBottom="@dimen/ten_dp"
     android:background="@drawable/card_down"
     android:elevation="@dimen/ten_dp"
-    android:layout_marginTop="-4dp"
-    android:layout_marginLeft="@dimen/ten_dp"
-    android:layout_marginRight="@dimen/ten_dp"
-    android:layout_marginBottom="@dimen/ten_dp">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/purewhite"
         android:paddingLeft="@dimen/fifteen_dp"
+        android:paddingTop="@dimen/ten_dp"
         android:paddingRight="@dimen/fifteen_dp"
-        android:paddingBottom="@dimen/fifteen_dp"
-        android:paddingTop="@dimen/ten_dp">
+        android:paddingBottom="@dimen/fifteen_dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@drawable/grey_bg_rounded_cor"
+            android:gravity="center"
             android:paddingLeft="@dimen/eight_dp"
             android:paddingTop="@dimen/five_dp"
             android:paddingRight="@dimen/eight_dp"
-            android:paddingBottom="@dimen/five_dp"
-            android:gravity="center">
+            android:paddingBottom="@dimen/five_dp">
 
             <EditText
                 android:id="@+id/etSearch"
@@ -37,6 +37,7 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890-/\+"
+                android:ellipsize="end"
                 android:fontFamily="@font/roboto_regular"
                 android:hint="@string/search_by_name_or_patient_id"
                 android:padding="@dimen/five_dp"
@@ -65,10 +66,28 @@
         android:layout_height="1dp"
         android:background="@color/grey" />
 
-    <com.mindorks.placeholderview.PlaceHolderView
-        android:id="@+id/phvSurgeryPatient"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/purewhite" />
+        android:layout_height="wrap_content">
 
+        <TextView
+            android:id="@+id/tv_noData"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="@color/purewhite"
+            android:fontFamily="@font/roboto_regular"
+            android:text="Patient doesn't exist"
+            android:textColor="@color/heading_purple"
+            android:textSize="@dimen/sixteen_sp"
+            android:layout_margin="@dimen/fifteen_dp"
+            android:visibility="gone" />
+
+        <com.mindorks.placeholderview.PlaceHolderView
+            android:id="@+id/phvSurgeryPatient"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/purewhite"
+            android:visibility="visible" />
+    </RelativeLayout>
 </LinearLayout>

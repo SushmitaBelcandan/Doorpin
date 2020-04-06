@@ -49,6 +49,9 @@ public class LoginRequest {
         @SerializedName("login_id")
         public String login_id;
 
+        @SerializedName("hospital_id")
+        public String hospital_id;
+
     }
 
 

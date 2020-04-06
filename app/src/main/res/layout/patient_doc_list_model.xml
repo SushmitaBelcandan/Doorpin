@@ -12,7 +12,7 @@
         android:id="@+id/ivDocs"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:padding="@dimen/ten_dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/reset_pwd" />
 
 </androidx.cardview.widget.CardView>

@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:background="@color/purple"
-        android:orientation="vertical"
-        android:elevation="8dp">
+        android:elevation="8dp"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -21,29 +21,54 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="My Surgeries"
-                android:textSize="16dp"
-                android:padding="10dp"
                 android:layout_margin="10dp"
-                android:textColor="@color/purewhite"/>
+                android:padding="10dp"
+                android:text="My Surgeries"
+                android:textColor="@color/purewhite"
+                android:textSize="16dp" />
+
             <ImageView
+                android:id="@+id/imgBtnLogout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:layout_margin="10dp"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/logout_white"/>
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:src="@drawable/logout_white" />
         </RelativeLayout>
     </LinearLayout>
 
-    <com.mindorks.placeholderview.ExpandablePlaceHolderView
-        android:id="@+id/phv_surgeries"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btm_navigation_view"
         android:layout_below="@+id/ll_mysurgeries"
-        android:background="@color/purewhite"
-        android:layout_above="@+id/btm_navigation_view"/>
+        android:background="@color/purewhite">
+
+        <LinearLayout
+            android:id="@+id/llNoData"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/no_surgery"
+                android:textColor="@color/heading_purple"
+                android:textSize="@dimen/fourteen_sp" />
+        </LinearLayout>
+
+        <com.mindorks.placeholderview.ExpandablePlaceHolderView
+            android:id="@+id/phv_surgeries"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:background="@color/purewhite"
+            android:visibility="visible" />
+
+    </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_surgeries"
@@ -63,9 +88,9 @@
         android:id="@+id/btm_navigation_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/navigation_doctor"
+        android:layout_alignParentBottom="true"
         android:background="@color/purewhite"
-        android:layout_alignParentBottom="true" />
+        app:menu="@menu/navigation_doctor" />
 
 
 </RelativeLayout>

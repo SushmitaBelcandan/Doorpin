@@ -35,7 +35,7 @@
     <string name="dateofbirth">Date of Birth</string>
     <string name="gender">Gender</string>
     <string name="marital_status">Marital Status</string>
-    <string name="t_o_d">Type of disease</string>
+    <string name="t_o_d">Type of Illness</string>
     <string name="fw_up">Follow Up Date</string>
     <string name="recommended_doctor">Recommended Doctor</string>
     <string name="patient_age">Patient\'s Age</string>
@@ -51,7 +51,9 @@
     <string name="surgeries_done">Surgeries done by you</string>
     <string name="nurse_name">Shreya Mehal</string>
     <string name="search_by_name_or_patient_id">Search by Patient Name/ Patient Id</string>
-    <string name="no_patient_list">No Patient List</string>
+    <string name="no_patient_list">No Patients Available</string>
+    <string name="empty_docs">Empty Documents List</string>
+    <string name="no_surgery">Empty Surgery List</string>
     <string name="network_error">Network Connection error! Please try again later</string>
     <string name="patient_details_toolbar">Patient Details</string>
     <!--illness list-->
@@ -83,4 +85,11 @@
     <string name="new_patient_toolbar">New Patient</string>
     <!-- add disease-->
     <string name="add_disease_tool_bar_title">Add Disease</string>
+    <!--upload image from gallery or camera-->
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
+    <!--upload docs user profile-->
+    <string name="upload_genunity">Genunity Document</string>
+    <string name="upload_exp">Experience Document</string>
+    <string name="edit_Profile_toolbar">Edit Profile</string>
 </resources>
